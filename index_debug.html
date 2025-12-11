@@ -22,18 +22,12 @@
 
         .main-layout {
             display: grid;
-            grid-template-columns: 260px 1fr 1fr 320px;
+            grid-template-columns: 240px 1fr 1fr 1fr;
             grid-template-rows: calc(50vh - 25px) calc(50vh - 25px);
             gap: 12px;
             height: calc(100vh - 30px);
             overflow: hidden;
-        }
-
-        /* Widget container - rightmost column, reserved space for chatbot */
-        .widget-column {
-            grid-row: 1 / 3;
-            position: relative;
-            min-width: 320px;
+            margin-right: 25%;  /* Reserve right quarter for chatbot widget */
         }
 
         /* Boolean value highlighting */
@@ -272,8 +266,8 @@
             margin-top: 6px;
         }
 
-        /* PostMessages Panel - now in right column top section */
-        .postmessage-panel {
+        /* Panel containers */
+        .panel-container {
             display: flex;
             flex-direction: column;
             max-height: calc(50vh - 25px);
@@ -501,15 +495,6 @@
             font-size: 0.62rem;
         }
 
-        /* Right Column - Stacked Panels */
-        .right-column {
-            display: flex;
-            flex-direction: column;
-            gap: 12px;
-            overflow: hidden;
-            max-height: calc(50vh - 25px);
-        }
-
         /* Quick Actions Panel */
         .quick-actions {
             background: #1e1e1e;
@@ -593,29 +578,26 @@
         /* Responsive */
         @media (max-width: 1400px) {
             .main-layout {
-                grid-template-columns: 240px 1fr 1fr 300px;
+                grid-template-columns: 220px 1fr 1fr 1fr;
+                margin-right: 22%;
             }
         }
 
         @media (max-width: 1200px) {
             .main-layout {
-                grid-template-columns: 220px 1fr 280px;
-                grid-template-rows: auto auto auto;
-            }
-            .widget-column {
-                grid-row: auto;
+                grid-template-columns: 200px 1fr 1fr;
+                grid-template-rows: auto auto auto auto;
+                margin-right: 20%;
             }
             .sidebar {
-                grid-row: auto;
+                grid-row: 1 / 3;
             }
         }
 
         @media (max-width: 768px) {
             .main-layout {
                 grid-template-columns: 1fr;
-            }
-            .widget-column {
-                min-width: auto;
+                margin-right: 0;
             }
         }
     </style>
@@ -718,95 +700,88 @@
             </div>
         </div>
 
-        <!-- Middle Column - Top (Console + Quick Actions) -->
-        <div class="right-column">
-            <!-- Console Log Panel -->
-            <div class="debug-panel" style="flex: 1;">
-                <div class="panel-header">
-                    <span class="panel-title"><span>&#128221;</span> Console Logs</span>
-                    <div class="panel-actions">
-                        <span class="panel-count" id="consoleCount">0</span>
-                        <button class="copy-btn" onclick="debugTools.copyPanelLogs('console')">
-                            <span>&#128203;</span> Copy
-                        </button>
-                    </div>
+        <!-- Column 2 - Console Logs (top) -->
+        <div class="debug-panel">
+            <div class="panel-header">
+                <span class="panel-title"><span>&#128221;</span> Console Logs</span>
+                <div class="panel-actions">
+                    <span class="panel-count" id="consoleCount">0</span>
+                    <button class="copy-btn" onclick="debugTools.copyPanelLogs('console')">
+                        <span>&#128203;</span> Copy
+                    </button>
                 </div>
-                <div class="panel-content" id="consoleLogs"></div>
             </div>
+            <div class="panel-content" id="consoleLogs"></div>
+        </div>
 
-            <!-- Quick Actions -->
-            <div class="quick-actions">
-                <h3><span>&#9889;</span> Quick Actions</h3>
-                <div class="action-grid">
-                    <button class="action-btn" onclick="debugTools.inspectWidget()">
-                        <span class="icon">&#128269;</span>
-                        Inspect
-                    </button>
-                    <button class="action-btn" onclick="debugTools.checkConnectivity()">
-                        <span class="icon">&#128225;</span>
-                        Ping
-                    </button>
-                    <button class="action-btn" onclick="debugTools.copyFullReport()">
-                        <span class="icon">&#128203;</span>
-                        Full Report
-                    </button>
-                    <button class="action-btn" onclick="debugTools.copyWidgetConfig()">
-                        <span class="icon">&#9881;</span>
-                        Copy Config
+        <!-- Column 3 - PostMessages (top) -->
+        <div class="debug-panel">
+            <div class="panel-header">
+                <span class="panel-title"><span>&#128233;</span> PostMessages</span>
+                <div class="panel-actions">
+                    <span class="panel-count" id="postMessageCount">0</span>
+                    <span class="panel-count filtered" id="postMessageFiltered" style="display:none;">0 hidden</span>
+                    <button class="copy-btn" onclick="debugTools.copyPanelLogs('postMessage')">
+                        <span>&#128203;</span> Copy
                     </button>
                 </div>
+            </div>
+            <div class="panel-content" id="postMessageLogs"></div>
+        </div>
+
+        <!-- Column 4 - Quick Actions (top) -->
+        <div class="quick-actions" style="height: fit-content;">
+            <h3><span>&#9889;</span> Quick Actions</h3>
+            <div class="action-grid">
+                <button class="action-btn" onclick="debugTools.inspectWidget()">
+                    <span class="icon">&#128269;</span>
+                    Inspect
+                </button>
+                <button class="action-btn" onclick="debugTools.checkConnectivity()">
+                    <span class="icon">&#128225;</span>
+                    Ping
+                </button>
+                <button class="action-btn" onclick="debugTools.copyFullReport()">
+                    <span class="icon">&#128203;</span>
+                    Full Report
+                </button>
+                <button class="action-btn" onclick="debugTools.copyWidgetConfig()">
+                    <span class="icon">&#9881;</span>
+                    Copy Config
+                </button>
             </div>
         </div>
 
-        <!-- Middle Column - Bottom (Network + Widget Events) -->
-        <div class="right-column">
-            <!-- Network Panel -->
-            <div class="debug-panel" style="flex: 1;">
-                <div class="panel-header">
-                    <span class="panel-title"><span>&#127760;</span> Network</span>
-                    <div class="panel-actions">
-                        <span class="panel-count" id="networkLogCount">0</span>
-                        <button class="copy-btn" onclick="debugTools.copyPanelLogs('network')">
-                            <span>&#128203;</span> Copy
-                        </button>
-                    </div>
+        <!-- Column 2 - Network (bottom) -->
+        <div class="debug-panel">
+            <div class="panel-header">
+                <span class="panel-title"><span>&#127760;</span> Network</span>
+                <div class="panel-actions">
+                    <span class="panel-count" id="networkLogCount">0</span>
+                    <button class="copy-btn" onclick="debugTools.copyPanelLogs('network')">
+                        <span>&#128203;</span> Copy
+                    </button>
                 </div>
-                <div class="panel-content" id="networkLogs"></div>
             </div>
-
-            <!-- Widget Events Panel -->
-            <div class="debug-panel" style="flex: 1;">
-                <div class="panel-header">
-                    <span class="panel-title"><span>&#9889;</span> Widget Events</span>
-                    <div class="panel-actions">
-                        <span class="panel-count" id="eventCount">0</span>
-                        <button class="copy-btn" onclick="debugTools.copyPanelLogs('events')">
-                            <span>&#128203;</span> Copy
-                        </button>
-                    </div>
-                </div>
-                <div class="panel-content" id="eventLogs"></div>
-            </div>
+            <div class="panel-content" id="networkLogs"></div>
         </div>
 
-        <!-- Right Column - PostMessages + Widget Space -->
-        <div class="widget-column">
-            <!-- PostMessages Panel -->
-            <div class="debug-panel" style="height: calc(50vh - 25px); margin-bottom: 12px;">
-                <div class="panel-header">
-                    <span class="panel-title"><span>&#128233;</span> PostMessages</span>
-                    <div class="panel-actions">
-                        <span class="panel-count" id="postMessageCount">0</span>
-                        <span class="panel-count filtered" id="postMessageFiltered" style="display:none;">0 hidden</span>
-                        <button class="copy-btn" onclick="debugTools.copyPanelLogs('postMessage')">
-                            <span>&#128203;</span> Copy
-                        </button>
-                    </div>
+        <!-- Column 3 - Widget Events (bottom) -->
+        <div class="debug-panel">
+            <div class="panel-header">
+                <span class="panel-title"><span>&#9889;</span> Widget Events</span>
+                <div class="panel-actions">
+                    <span class="panel-count" id="eventCount">0</span>
+                    <button class="copy-btn" onclick="debugTools.copyPanelLogs('events')">
+                        <span>&#128203;</span> Copy
+                    </button>
                 </div>
-                <div class="panel-content" id="postMessageLogs"></div>
             </div>
-            <!-- Widget will render in remaining space below -->
+            <div class="panel-content" id="eventLogs"></div>
         </div>
+
+        <!-- Column 4 - Empty space (bottom) - chatbot renders here -->
+        <div></div>
     </div>
 
     <!-- Toast Notification -->
