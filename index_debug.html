@@ -1562,8 +1562,19 @@ document.getElementById('openChat').onclick = function() {
             <div class="panel-content" id="eventLogs"></div>
         </div>
 
-        <!-- Column 4 - Empty space (bottom) - chatbot renders here -->
-        <div></div>
+        <!-- Column 4 - Browser Console (bottom) -->
+        <div class="debug-panel">
+            <div class="panel-header">
+                <span class="panel-title"><span>&#128187;</span> Browser Console</span>
+                <div class="panel-actions">
+                    <span class="panel-count" id="browserConsoleCount">0</span>
+                    <button class="copy-btn" onclick="debugTools.copyPanelLogs('browserConsole')">
+                        <span>&#128203;</span> Copy
+                    </button>
+                </div>
+            </div>
+            <div class="panel-content" id="browserConsoleLogs"></div>
+        </div>
     </div>
 
     <!-- Toast Notification -->
@@ -1615,7 +1626,8 @@ document.getElementById('openChat').onclick = function() {
                 console: [],
                 postMessage: [],
                 network: [],
-                events: []
+                events: [],
+                browserConsole: []
             },
             rawLogs: {
                 postMessage: []
@@ -1889,6 +1901,36 @@ document.getElementById('openChat').onclick = function() {
                 this.updateCounts();
             },
 
+            addBrowserConsoleLog: function(message, logType = 'info') {
+                const timestamp = new Date().toLocaleTimeString();
+                const entry = { timestamp, message, logType, id: this.entryIndex++ };
+                this.logs.browserConsole.push(entry);
+
+                const container = document.getElementById('browserConsoleLogs');
+                if (!container) return;
+
+                const div = document.createElement('div');
+                div.className = `log-entry ${logType}`;
+                div.setAttribute('data-entry-id', entry.id);
+
+                const prefix = logType === 'error' ? '[ERR]' :
+                               logType === 'warn' ? '[WARN]' :
+                               logType === 'info' ? '[LOG]' : '[LOG]';
+
+                div.innerHTML = `
+                    <button class="entry-copy-btn" onclick="debugTools.copyEntry(${entry.id}, 'browserConsole', this)">Copy</button>
+                    <span class="log-time" style="color: #888; font-size: 0.65rem;">${timestamp}</span>
+                    <span style="color: ${logType === 'error' ? '#ff6b6b' : logType === 'warn' ? '#ffc107' : '#888'}; font-size: 0.65rem; margin: 0 4px;">${prefix}</span>
+                    <span class="log-message" style="font-size: 0.7rem;">${this.escapeHtml(message)}</span>
+                `;
+
+                container.appendChild(div);
+                container.scrollTop = container.scrollHeight;
+
+                // Update count
+                document.getElementById('browserConsoleCount').textContent = this.logs.browserConsole.length;
+            },
+
             renderLog: function(type, entry) {
                 const containerId = type === 'console' ? 'consoleLogs' :
                                    type === 'network' ? 'networkLogs' : 'eventLogs';
@@ -1970,6 +2012,7 @@ document.getElementById('openChat').onclick = function() {
                     widgetConfig: this.widgetConfig,
                     logs: {
                         console: this.logs.console,
+                        browserConsole: this.logs.browserConsole,
                         postMessage: this.logs.postMessage.filter(l => l.category === 'widget'),
                         network: this.logs.network,
                         events: this.logs.events
@@ -2010,6 +2053,7 @@ document.getElementById('openChat').onclick = function() {
                     widgetConfig: this.widgetConfig,
                     logs: {
                         console: this.logs.console,
+                        browserConsole: this.logs.browserConsole,
                         postMessage: this.logs.postMessage.filter(l => l.category === 'widget'),
                         network: this.logs.network,
                         events: this.logs.events
@@ -2111,6 +2155,8 @@ document.getElementById('openChat').onclick = function() {
             isLoggingToPanel = true;
             try {
                 debugTools.addLog(type, message, null, logType);
+                // Also log to Browser Console panel
+                debugTools.addBrowserConsoleLog(message, logType);
             } finally {
                 isLoggingToPanel = false;
             }
