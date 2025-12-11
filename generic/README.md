@@ -1,154 +1,201 @@
 # WidgetScope - Webex Connect Debug Dashboard
 
-A generic, reusable debug dashboard for testing and troubleshooting Webex Connect (IMI Chat) chatbot widgets.
+A simple, single-file debug dashboard for testing Webex Connect (IMI Chat) chatbot widgets. No build process, no dependencies - just open and go.
 
-## Features
+## 5-Minute Setup
 
-- **Real-time PostMessage monitoring** - See all communication between widget iframe and parent page
-- **Console log capture** - Intercepts and displays all JavaScript console output
-- **Network activity tracking** - Monitors XHR and Fetch requests
-- **Widget event logging** - Tracks widget lifecycle events
-- **Noise filtering** - Automatically filters React DevTools and browser extension messages
-- **Boolean highlighting** - Green for true, red for false in JSON displays
-- **Widget config parsing** - Displays parsed widget configuration in sidebar
-- **Comprehensive documentation** - Built-in help panel with SDK reference
+### Step 1: Get Your Widget Credentials
 
-## Quick Start
+You need two values from Webex Engage:
 
-### Option 1: URL Parameters
-
-Just add your credentials to the URL:
-
-```
-index.html?guid=YOUR-WIDGET-GUID&bind=YOUR-BIND-ID&org=Your%20Company
-```
-
-### Option 2: Setup Modal
-
-1. Open `index.html` in a browser
-2. The setup modal will appear automatically
-3. Enter your Widget GUID and Data Bind ID
-4. Click "Save & Load Widget"
-
-Your credentials are saved to localStorage for future visits.
-
-### Option 3: Direct Configuration
-
-Edit the `divicw` element directly:
+1. Log in to **Webex Engage Admin Console**
+2. Go to **Assets** → **LiveChat**
+3. Click on your LiveChat asset (or create one)
+4. Go to the **Installation** tab
+5. Find the code snippet - it looks like this:
 
 ```html
 <div id="divicw"
-     data-bind="YOUR-BIND-ID"
-     data-guid="YOUR-WIDGET-GUID">
+     data-bind="BDA10ED6-14B4-41E8-A74C-62E0E5895C78"  <!-- This is your BIND ID -->
+     data-guid="8da474ae-5313-4b52-a2c6-fd6cbf02e5c8"> <!-- This is your GUID -->
 </div>
+<script src="https://media.imi.chat/widget/js/imichatinit.js"></script>
 ```
 
-## Where to Find Your Credentials
+Copy these two values:
+- **GUID** = the `data-guid` value
+- **Bind ID** = the `data-bind` value
 
-1. Log in to **Webex Engage Admin Console**
-2. Go to **Assets** > **LiveChat**
-3. Select your widget
-4. Find the **Installation** tab
-5. Copy the `data-guid` and `data-bind` values from the snippet
+### Step 2: Open WidgetScope
 
-## URL Parameters
+**Option A: Use the hosted version**
+```
+https://webextestbot.vercel.app/generic/index.html?guid=YOUR-GUID&bind=YOUR-BIND-ID
+```
 
-| Parameter | Description | Required |
-|-----------|-------------|----------|
-| `guid` | Widget GUID from Webex Engage | Yes |
-| `bind` | Data Bind ID from installation snippet | Yes |
-| `org` | Organization name (displayed in sidebar) | No |
+**Option B: Run locally**
+1. Download `index.html`
+2. Open it in your browser
+3. Enter your credentials in the setup modal
 
-## Dashboard Panels
+### Step 3: Start Debugging
+
+That's it! The widget should appear on the right side of the screen. Use the dashboard panels to:
+- Watch PostMessages for widget communication
+- Monitor network requests
+- Check console output
+- View widget configuration
+
+---
+
+## Don't Have a Widget Yet?
+
+### Quick Start with Webex Connect
+
+1. **Get Access**: Sign up at [Webex Connect](https://www.webexconnect.io/) or contact Cisco sales
+2. **Follow the Lab**: Complete the official setup lab at **[Webex CC Digital Lab](https://webexcc.github.io/pages/Digital/)** - this walks through creating LiveChat assets step-by-step
+3. **Create a LiveChat Asset**: In Webex Engage Admin Console → Assets → LiveChat → Add
+4. **Whitelist Your Domain**: Add your website domain (without http://) in the asset settings
+5. **Copy the Installation Snippet**: Get your GUID and Bind ID from the Installation tab
+
+### Official Documentation
+
+| Resource | Description |
+|----------|-------------|
+| [Webex CC Digital Lab](https://webexcc.github.io/pages/Digital/) | Step-by-step setup tutorial |
+| [LiveChat Channel Setup](https://docs.imi.chat/docs/livechat-channel) | Detailed configuration guide |
+| [Webex Engage Developer Guide](https://docs.imi.chat/reference/introduction) | API reference |
+| [Widget SDK Methods](https://docs.imi.chat/reference/imichatwidgetshow) | JavaScript SDK docs |
+| [Cisco Community Forum](https://community.cisco.com/t5/webex-connect/bd-p/connect) | Get help from the community |
+
+---
+
+## Configuration Options
+
+### URL Parameters (Recommended for Testing)
+
+```
+index.html?guid=YOUR-GUID&bind=YOUR-BIND-ID&org=Your%20Company%20Name
+```
+
+| Parameter | Required | Description |
+|-----------|----------|-------------|
+| `guid` | Yes | Widget GUID from Webex Engage |
+| `bind` | Yes | Data Bind ID from installation snippet |
+| `org` | No | Your organization name (shown in sidebar) |
+
+### Setup Modal
+
+If you open the page without URL parameters, a setup modal appears automatically. Enter your credentials and click "Save & Load Widget". Your settings are saved to localStorage.
+
+### Change Settings Anytime
+
+Click the **Configure Widget** button in the sidebar to update your credentials.
+
+---
+
+## Dashboard Features
 
 ### Left Sidebar
-- Widget status indicators
-- Session information
-- Filter controls
-- Widget configuration display
-- Quick action buttons
+- **Status indicators** - Widget and script load status
+- **Session info** - Session ID, duration, fingerprint
+- **Filter controls** - Hide noise from browser extensions
+- **Widget config** - Parsed configuration from the widget
 
 ### Console Logs
-Captures all `console.log`, `console.error`, `console.warn`, and `console.info` calls.
+Captures `console.log`, `console.error`, `console.warn` from your page.
 
 ### PostMessages
-Shows all `postMessage` communication. Messages are categorized:
-- **WIDGET** (green) - Messages from media.imi.chat
-- **BROWSER** (gray) - Browser extension noise
-- **DEBUG** (blue) - Debug panel messages
+Shows all cross-origin messages. Look for:
+- `loadstyles` - Widget configuration received
+- `setlocal` - Widget storing data
+- Messages from `media.imi.chat` (tagged as WIDGET)
 
 ### Network
-Tracks all XHR and Fetch requests with timing and response data.
+Tracks XHR and Fetch requests with timing.
 
 ### Widget Events
-Logs widget lifecycle events like script loading, DOM mutations, and config receipt.
+Lifecycle events like script loading and DOM changes.
 
-## Quick Actions
+### Quick Actions
+| Button | What it does |
+|--------|--------------|
+| **Inspect** | Shows current widget DOM state |
+| **Ping** | Tests connectivity to IMI servers |
+| **Full Report** | Copies debug report to clipboard |
+| **Copy Config** | Copies widget config JSON |
 
-| Button | Action |
-|--------|--------|
-| Inspect | Logs current widget DOM state |
-| Ping | Tests connectivity to IMI servers |
-| Full Report | Copies comprehensive debug report to clipboard |
-| Copy Config | Copies widget configuration JSON |
-
-## Keyboard Shortcuts
-
-- `Escape` - Close help panel or setup modal
-
-## Deployment
-
-This is a single HTML file with no dependencies. Deploy it anywhere:
-
-- Static file hosting (GitHub Pages, Netlify, Vercel)
-- Local file system
-- Any web server
-
-### Vercel Example
-
-```bash
-npm i -g vercel
-vercel --prod
-```
-
-## Customization
-
-### Branding
-The organization badge is configurable via:
-- URL parameter: `?org=Your%20Company`
-- Setup modal
-- LocalStorage: `webex_widget_org`
-
-### Filters
-Toggle these in the sidebar:
-- Hide React DevTools noise
-- Hide debug panel test messages
-- Collapse repeated messages
+---
 
 ## Troubleshooting
 
-### Widget Not Loading
-1. Check that GUID and Bind ID are correct
-2. Verify your domain is whitelisted in Webex Engage Admin Console
-3. Use the Ping button to test connectivity
-4. Check Console Logs for errors
+### Widget Not Appearing?
 
-### No PostMessages Appearing
-1. Disable the "Hide React DevTools" filter temporarily
-2. Check if the widget script loaded (see Network panel)
-3. Look for `loadstyles` action - if missing, widget failed to initialize
+1. **Check your GUID and Bind ID** - Make sure they're correct (no extra spaces)
+2. **Whitelist your domain** - In Webex Engage, add your domain WITHOUT http://
+3. **Check the Console Logs panel** - Look for errors
+4. **Click Ping** - Verify you can reach IMI servers
+
+### Widget Loads But No Response?
+
+1. **Check `agent_avail`** in the Widget Config section - if it's 0, no agents are online
+2. **Verify your bot flow** is published in Webex Connect
+3. **Check webhook configuration** in your bot integration
 
 ### Common Errors
-- **404 on imichatinit.js** - Script URL may be blocked
-- **CORS errors** - Domain not whitelisted
-- **No agent_avail** - Check agent schedules in Admin Console
+
+| Error | Solution |
+|-------|----------|
+| 404 on imichatinit.js | Check if script URL is blocked |
+| CORS errors | Domain not whitelisted in Webex Engage |
+| Widget GUID not found | Verify GUID matches your asset |
+| loadstyles not received | Check GUID and Bind ID are correct |
+
+---
+
+## Deployment
+
+This is a single HTML file with no dependencies. Deploy anywhere:
+
+```bash
+# Vercel
+vercel --prod
+
+# Netlify
+netlify deploy --prod
+
+# GitHub Pages
+# Just commit and enable Pages in repo settings
+
+# Or just open the file locally!
+```
+
+---
+
+## Using in Your Own Website
+
+Once you've tested with WidgetScope, add the widget to your site:
+
+```html
+<!-- Add before closing </body> tag -->
+<div id="divicw"
+     data-bind="YOUR-BIND-ID"
+     data-guid="YOUR-GUID">
+</div>
+<script src="https://media.imi.chat/widget/js/imichatinit.js"></script>
+```
+
+For advanced usage (custom buttons, passing user data), see the [SDK documentation](https://docs.imi.chat/reference/introduction).
+
+---
 
 ## License
 
-MIT License - Feel free to use, modify, and distribute.
+MIT License - Use freely, modify, distribute.
 
 ## Resources
 
-- [Webex Engage Developer Guide](https://docs.imi.chat/reference/introduction)
-- [LiveChat Channel Setup](https://docs.imi.chat/docs/livechat-channel)
-- [Cisco Community Forum](https://community.cisco.com/t5/webex-connect/bd-p/connect)
+- [Webex CC Digital Lab](https://webexcc.github.io/pages/Digital/) - Official setup tutorial
+- [Webex Connect Platform](https://www.webexconnect.io/)
+- [Developer Documentation](https://docs.imi.chat/)
+- [Cisco Community](https://community.cisco.com/t5/webex-connect/bd-p/connect)
