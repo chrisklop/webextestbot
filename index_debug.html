@@ -23,10 +23,10 @@
         .main-layout {
             display: grid;
             grid-template-columns: 320px 1fr 1fr;
-            grid-template-rows: 1fr 1fr;
+            grid-template-rows: calc(50vh - 25px) calc(50vh - 25px);
             gap: 15px;
-            flex: 1;
-            min-height: 0;
+            height: calc(100vh - 30px);
+            overflow: hidden;
         }
 
         /* Left Sidebar - Status & Controls */
@@ -35,6 +35,8 @@
             display: flex;
             flex-direction: column;
             gap: 15px;
+            overflow-y: auto;
+            max-height: calc(100vh - 30px);
         }
 
         .container {
@@ -231,6 +233,8 @@
             grid-row: 1 / 3;
             display: flex;
             flex-direction: column;
+            max-height: calc(100vh - 30px);
+            overflow: hidden;
         }
 
         /* Debug Panel Styles */
@@ -242,6 +246,7 @@
             flex-direction: column;
             min-height: 0;
             flex: 1;
+            max-height: 100%;
         }
 
         .panel-header {
@@ -304,11 +309,13 @@
         .panel-content {
             flex: 1;
             overflow-y: auto;
+            overflow-x: hidden;
             padding: 8px;
             font-family: 'Monaco', 'Menlo', 'Ubuntu Mono', monospace;
             font-size: 0.72rem;
             line-height: 1.4;
             min-height: 0;
+            max-height: 100%;
         }
 
         .log-entry {
@@ -402,6 +409,8 @@
             display: flex;
             flex-direction: column;
             gap: 15px;
+            overflow: hidden;
+            max-height: calc(50vh - 25px);
         }
 
         /* Quick Actions Panel */
@@ -409,6 +418,7 @@
             background: #1e1e1e;
             border-radius: 12px;
             padding: 15px;
+            flex-shrink: 0;
         }
 
         .quick-actions h3 {
@@ -960,7 +970,7 @@
             }
         };
 
-        // Override console methods
+        // Override console methods with recursion guard
         const originalConsole = {
             log: console.log.bind(console),
             error: console.error.bind(console),
@@ -968,24 +978,49 @@
             info: console.info.bind(console)
         };
 
+        let isLoggingToPanel = false;
+
+        function safeLogToPanel(type, args, logType) {
+            if (isLoggingToPanel) return;
+            if (args.length === 0) return;
+
+            const message = args.map(a => {
+                if (a === undefined) return 'undefined';
+                if (a === null) return 'null';
+                if (typeof a === 'object') {
+                    try { return JSON.stringify(a); } catch { return String(a); }
+                }
+                return String(a);
+            }).join(' ').trim();
+
+            if (!message || message === '' || message === 'undefined' || message === 'null') return;
+
+            isLoggingToPanel = true;
+            try {
+                debugTools.addLog(type, message, null, logType);
+            } finally {
+                isLoggingToPanel = false;
+            }
+        }
+
         console.log = function(...args) {
             originalConsole.log(...args);
-            debugTools.addLog('console', args.map(a => typeof a === 'object' ? JSON.stringify(a) : String(a)).join(' '), null, 'info');
+            safeLogToPanel('console', args, 'info');
         };
 
         console.error = function(...args) {
             originalConsole.error(...args);
-            debugTools.addLog('console', args.map(a => typeof a === 'object' ? JSON.stringify(a) : String(a)).join(' '), null, 'error');
+            safeLogToPanel('console', args, 'error');
         };
 
         console.warn = function(...args) {
             originalConsole.warn(...args);
-            debugTools.addLog('console', args.map(a => typeof a === 'object' ? JSON.stringify(a) : String(a)).join(' '), null, 'warn');
+            safeLogToPanel('console', args, 'warn');
         };
 
         console.info = function(...args) {
             originalConsole.info(...args);
-            debugTools.addLog('console', args.map(a => typeof a === 'object' ? JSON.stringify(a) : String(a)).join(' '), null, 'info');
+            safeLogToPanel('console', args, 'info');
         };
 
         // Intercept postMessage
