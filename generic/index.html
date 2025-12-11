@@ -1685,121 +1685,150 @@ document.getElementById('openChat').onclick = function() {
             <div class="panel-content" id="eventLogs"></div>
         </div>
 
-        <!-- Column 4 - Empty space (bottom) - chatbot renders here -->
-        <div></div>
+        <!-- Column 4 - Browser Console (bottom) -->
+        <div class="debug-panel">
+            <div class="panel-header">
+                <span class="panel-title"><span>&#128187;</span> Browser Console</span>
+                <div class="panel-actions">
+                    <span class="panel-count" id="browserConsoleCount">0</span>
+                    <button class="copy-btn" onclick="debugTools.copyPanelLogs('browserConsole')">
+                        <span>&#128203;</span> Copy
+                    </button>
+                </div>
+            </div>
+            <div class="panel-content" id="browserConsoleLogs"></div>
+        </div>
     </div>
 
     <!-- Toast Notification -->
     <div class="toast" id="toast">Copied to clipboard!</div>
 
     <!-- Webex Connect Chatbot Widget -->
-    <!-- Widget container - credentials set dynamically via config -->
     <div id="divicw" data-bind="" data-org="" data-guid=""></div>
 
     <!-- Setup Modal -->
     <div class="setup-modal" id="setupModal">
         <div class="setup-content">
-            <h2>Configure Your Widget</h2>
+            <h2>Configure WidgetScope</h2>
             <p>Enter your Webex Connect widget credentials to get started.</p>
 
             <div class="setup-field">
-                <label for="setupGuid">Widget GUID</label>
-                <input type="text" id="setupGuid" placeholder="xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx">
-                <small>Found in Webex Engage Admin Console - LiveChat Assets</small>
+                <label>Widget GUID</label>
+                <input type="text" id="setupGuid" placeholder="e.g., 8da474ae-5313-4b52-a2c6-fd6cbf02e5c8">
+                <small>Found in Webex Engage &rarr; Assets &rarr; LiveChat &rarr; Installation (data-guid)</small>
             </div>
 
             <div class="setup-field">
-                <label for="setupBind">Data Bind ID</label>
-                <input type="text" id="setupBind" placeholder="XXXXXXXX-XXXX-XXXX-XXXX-XXXXXXXXXXXX">
-                <small>Also called "Bind ID" in the installation snippet</small>
+                <label>Bind ID</label>
+                <input type="text" id="setupBind" placeholder="e.g., BDA10ED6-14B4-41E8-A74C-62E0E5895C78">
+                <small>Found in the same place (data-bind)</small>
             </div>
 
             <div class="setup-field">
-                <label for="setupOrg">Organization Name (optional)</label>
-                <input type="text" id="setupOrg" placeholder="Your Company Name">
+                <label>Organization Name (optional)</label>
+                <input type="text" id="setupOrg" placeholder="e.g., Your Company Name">
                 <small>Displayed in the sidebar badge</small>
             </div>
 
             <div class="setup-actions">
-                <button class="setup-btn primary" onclick="saveConfig()">Save & Load Widget</button>
                 <button class="setup-btn secondary" onclick="closeSetupModal()">Cancel</button>
+                <button class="setup-btn primary" onclick="saveConfig()">Save & Load Widget</button>
             </div>
 
-            <div class="setup-help">
-                <p><strong>Don't have credentials?</strong></p>
-                <p>You can also pass them via URL parameters:</p>
-                <code>?guid=xxx&bind=yyy&org=Name</code>
+            <div class="setup-help" style="margin-top: 20px; padding-top: 16px; border-top: 1px solid #2d2d4a;">
+                <p style="color: #888; font-size: 0.75rem; margin-bottom: 8px;">Need help finding your credentials?</p>
+                <a href="https://webexcc.github.io/pages/Digital/" target="_blank" style="color: #667eea; font-size: 0.75rem;">View setup guide &rarr;</a>
             </div>
         </div>
     </div>
 
     <script>
         // ========================================
-        // WIDGET CONFIGURATION (WidgetScope)
+        // Widget Configuration Functions
         // ========================================
 
+        // Get config from URL params or localStorage
         function getWidgetConfig() {
             const params = new URLSearchParams(window.location.search);
+            const stored = JSON.parse(localStorage.getItem('widgetScopeConfig') || '{}');
+
             return {
-                guid: params.get('guid') || localStorage.getItem('webex_widget_guid') || '',
-                bind: params.get('bind') || localStorage.getItem('webex_widget_bind') || '',
-                org: params.get('org') || localStorage.getItem('webex_widget_org') || 'Your Organization'
+                guid: params.get('guid') || stored.guid || '',
+                bind: params.get('bind') || stored.bind || '',
+                org: params.get('org') || stored.org || 'Your Organization'
             };
         }
 
+        // Show setup modal
         function showSetupModal() {
             const config = getWidgetConfig();
             document.getElementById('setupGuid').value = config.guid;
             document.getElementById('setupBind').value = config.bind;
-            document.getElementById('setupOrg').value = config.org !== 'Your Organization' ? config.org : '';
+            document.getElementById('setupOrg').value = config.org === 'Your Organization' ? '' : config.org;
             document.getElementById('setupModal').classList.add('show');
         }
 
+        // Close setup modal
         function closeSetupModal() {
             document.getElementById('setupModal').classList.remove('show');
         }
 
+        // Save config to localStorage and reload
         function saveConfig() {
-            const guid = document.getElementById('setupGuid').value.trim();
-            const bind = document.getElementById('setupBind').value.trim();
-            const org = document.getElementById('setupOrg').value.trim() || 'Your Organization';
+            const config = {
+                guid: document.getElementById('setupGuid').value.trim(),
+                bind: document.getElementById('setupBind').value.trim(),
+                org: document.getElementById('setupOrg').value.trim() || 'Your Organization'
+            };
 
-            if (!guid || !bind) {
-                alert('Please enter both Widget GUID and Data Bind ID');
+            if (!config.guid || !config.bind) {
+                alert('Please enter both GUID and Bind ID');
                 return;
             }
 
-            localStorage.setItem('webex_widget_guid', guid);
-            localStorage.setItem('webex_widget_bind', bind);
-            localStorage.setItem('webex_widget_org', org);
-
-            const widgetDiv = document.getElementById('divicw');
-            widgetDiv.setAttribute('data-guid', guid);
-            widgetDiv.setAttribute('data-bind', bind);
-            document.getElementById('orgBadge').textContent = org;
-
+            localStorage.setItem('widgetScopeConfig', JSON.stringify(config));
+            applyConfig(config);
             closeSetupModal();
-            showToast('Configuration saved!');
-            debugTools.reloadWidget();
+            showToast('Configuration saved! Reloading widget...');
+
+            // Reload the widget
+            setTimeout(() => {
+                window.location.reload();
+            }, 500);
         }
 
-        function applyConfig() {
-            const config = getWidgetConfig();
+        // Apply config to the page
+        function applyConfig(config) {
             const widgetDiv = document.getElementById('divicw');
-            widgetDiv.setAttribute('data-guid', config.guid);
-            widgetDiv.setAttribute('data-bind', config.bind);
-            document.getElementById('orgBadge').textContent = config.org;
-
-            if (!config.guid || !config.bind) {
-                setTimeout(() => showSetupModal(), 500);
-                return false;
+            if (widgetDiv) {
+                widgetDiv.setAttribute('data-guid', config.guid);
+                widgetDiv.setAttribute('data-bind', config.bind);
             }
-            return true;
+
+            const orgBadge = document.getElementById('orgBadge');
+            if (orgBadge) {
+                orgBadge.textContent = config.org;
+            }
         }
 
+        // Initialize config on page load
+        (function initConfig() {
+            const config = getWidgetConfig();
+
+            // If no config and no URL params, show setup modal
+            if (!config.guid || !config.bind) {
+                // Show setup modal after a brief delay
+                setTimeout(() => showSetupModal(), 500);
+            } else {
+                applyConfig(config);
+            }
+        })();
+
         // ========================================
-        // SESSION TRACKING
+        // Session Tracking
         // ========================================
+
+        // Session tracking
         const sessionStartTime = Date.now();
         const sessionUUID = 'dbg-' + Math.random().toString(36).substr(2, 9);
         document.getElementById('sessionId').textContent = sessionUUID;
@@ -1841,7 +1870,8 @@ document.getElementById('openChat').onclick = function() {
                 console: [],
                 postMessage: [],
                 network: [],
-                events: []
+                events: [],
+                browserConsole: []
             },
             rawLogs: {
                 postMessage: []
@@ -2115,6 +2145,36 @@ document.getElementById('openChat').onclick = function() {
                 this.updateCounts();
             },
 
+            addBrowserConsoleLog: function(message, logType = 'info') {
+                const timestamp = new Date().toLocaleTimeString();
+                const entry = { timestamp, message, logType, id: this.entryIndex++ };
+                this.logs.browserConsole.push(entry);
+
+                const container = document.getElementById('browserConsoleLogs');
+                if (!container) return;
+
+                const div = document.createElement('div');
+                div.className = `log-entry ${logType}`;
+                div.setAttribute('data-entry-id', entry.id);
+
+                const prefix = logType === 'error' ? '[ERR]' :
+                               logType === 'warn' ? '[WARN]' :
+                               logType === 'info' ? '[LOG]' : '[LOG]';
+
+                div.innerHTML = `
+                    <button class="entry-copy-btn" onclick="debugTools.copyEntry(${entry.id}, 'browserConsole', this)">Copy</button>
+                    <span class="log-time" style="color: #888; font-size: 0.65rem;">${timestamp}</span>
+                    <span style="color: ${logType === 'error' ? '#ff6b6b' : logType === 'warn' ? '#ffc107' : '#888'}; font-size: 0.65rem; margin: 0 4px;">${prefix}</span>
+                    <span class="log-message" style="font-size: 0.7rem;">${this.escapeHtml(message)}</span>
+                `;
+
+                container.appendChild(div);
+                container.scrollTop = container.scrollHeight;
+
+                // Update count
+                document.getElementById('browserConsoleCount').textContent = this.logs.browserConsole.length;
+            },
+
             renderLog: function(type, entry) {
                 const containerId = type === 'console' ? 'consoleLogs' :
                                    type === 'network' ? 'networkLogs' : 'eventLogs';
@@ -2191,11 +2251,12 @@ document.getElementById('openChat').onclick = function() {
                         url: window.location.href,
                         userAgent: navigator.userAgent,
                         screen: `${window.innerWidth}x${window.innerHeight}`,
-                        widgetGuid: getWidgetConfig().guid || 'not-configured'
+                        widgetGuid: getWidgetConfig().guid || 'not configured'
                     },
                     widgetConfig: this.widgetConfig,
                     logs: {
                         console: this.logs.console,
+                        browserConsole: this.logs.browserConsole,
                         postMessage: this.logs.postMessage.filter(l => l.category === 'widget'),
                         network: this.logs.network,
                         events: this.logs.events
@@ -2236,6 +2297,7 @@ document.getElementById('openChat').onclick = function() {
                     widgetConfig: this.widgetConfig,
                     logs: {
                         console: this.logs.console,
+                        browserConsole: this.logs.browserConsole,
                         postMessage: this.logs.postMessage.filter(l => l.category === 'widget'),
                         network: this.logs.network,
                         events: this.logs.events
@@ -2337,6 +2399,8 @@ document.getElementById('openChat').onclick = function() {
             isLoggingToPanel = true;
             try {
                 debugTools.addLog(type, message, null, logType);
+                // Also log to Browser Console panel
+                debugTools.addBrowserConsoleLog(message, logType);
             } finally {
                 isLoggingToPanel = false;
             }
@@ -2475,15 +2539,6 @@ document.getElementById('openChat').onclick = function() {
 
         // Widget initialization
         function initWidget() {
-            // First apply config
-            const hasConfig = applyConfig();
-            if (!hasConfig) {
-                debugTools.addLog('events', 'No widget config - showing setup modal', null, 'warn');
-                debugTools.updateStatus('Needs Config', '#ffc107');
-                debugTools.updateWidgetState('Config Required', false);
-                return;
-            }
-
             debugTools.addLog('events', 'Starting widget init...', null, 'info');
             debugTools.updateStatus('Loading...', '#ffc107');
 
@@ -2702,7 +2757,7 @@ Minimizes the chat widget to its collapsed state.
      data-guid="YOUR-WIDGET-GUID"></div>
 
 <!-- Widget script -->
-<script src="https://media.imi.chat/widget/js/imichatinit.js"></script>
+<scr` + `ipt src="https://media.imi.chat/widget/js/imichatinit.js"></scr` + `ipt>
 \`\`\`
 
 ### Domain Whitelisting
