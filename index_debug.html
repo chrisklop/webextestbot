@@ -1,0 +1,743 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Webex Connect Chatbot Test - Debug Mode</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, sans-serif;
+            background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            padding: 20px;
+        }
+
+        .top-section {
+            display: flex;
+            gap: 20px;
+            margin-bottom: 20px;
+            flex-wrap: wrap;
+        }
+
+        .container {
+            background: white;
+            border-radius: 16px;
+            padding: 30px;
+            max-width: 400px;
+            width: 100%;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+            text-align: center;
+        }
+
+        h1 {
+            color: #1a1a2e;
+            font-size: 1.5rem;
+            margin-bottom: 8px;
+        }
+
+        .subtitle {
+            color: #666;
+            font-size: 0.9rem;
+            margin-bottom: 20px;
+        }
+
+        .status-card {
+            background: #f8f9fa;
+            border-radius: 10px;
+            padding: 15px;
+            margin-bottom: 15px;
+        }
+
+        .status-indicator {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 0.85rem;
+            color: #28a745;
+        }
+
+        .status-dot {
+            width: 10px;
+            height: 10px;
+            background: #ffc107;
+            border-radius: 50%;
+            animation: pulse 2s infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.5; }
+        }
+
+        .badge {
+            display: inline-block;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 6px 14px;
+            border-radius: 20px;
+            font-size: 0.75rem;
+            font-weight: 600;
+            margin-bottom: 15px;
+        }
+
+        .debug-badge {
+            background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+            margin-left: 8px;
+        }
+
+        /* Debug Panel Styles */
+        .debug-panels {
+            flex: 1;
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+            gap: 15px;
+            max-width: 1200px;
+        }
+
+        .debug-panel {
+            background: #1e1e1e;
+            border-radius: 12px;
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+            max-height: 300px;
+        }
+
+        .panel-header {
+            background: #2d2d2d;
+            padding: 12px 15px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 1px solid #3d3d3d;
+        }
+
+        .panel-title {
+            color: #fff;
+            font-size: 0.85rem;
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .panel-title .icon {
+            font-size: 1rem;
+        }
+
+        .panel-count {
+            background: #667eea;
+            color: white;
+            padding: 2px 8px;
+            border-radius: 10px;
+            font-size: 0.7rem;
+        }
+
+        .panel-content {
+            flex: 1;
+            overflow-y: auto;
+            padding: 10px;
+            font-family: 'Monaco', 'Menlo', 'Ubuntu Mono', monospace;
+            font-size: 0.75rem;
+            line-height: 1.5;
+        }
+
+        .log-entry {
+            padding: 6px 10px;
+            margin: 4px 0;
+            border-radius: 6px;
+            background: #2a2a2a;
+            border-left: 3px solid #667eea;
+        }
+
+        .log-entry.error {
+            border-left-color: #f5576c;
+            background: #2a1a1a;
+        }
+
+        .log-entry.warn {
+            border-left-color: #ffc107;
+            background: #2a2a1a;
+        }
+
+        .log-entry.success {
+            border-left-color: #28a745;
+            background: #1a2a1a;
+        }
+
+        .log-entry.postmessage {
+            border-left-color: #17a2b8;
+            background: #1a2a2a;
+        }
+
+        .log-entry.network {
+            border-left-color: #fd7e14;
+            background: #2a2a1a;
+        }
+
+        .log-time {
+            color: #888;
+            font-size: 0.65rem;
+            margin-bottom: 3px;
+        }
+
+        .log-message {
+            color: #e0e0e0;
+            word-break: break-all;
+        }
+
+        .log-json {
+            color: #9cdcfe;
+            background: #1a1a1a;
+            padding: 8px;
+            border-radius: 4px;
+            margin-top: 5px;
+            overflow-x: auto;
+            white-space: pre-wrap;
+        }
+
+        .clear-btn {
+            background: #3d3d3d;
+            border: none;
+            color: #888;
+            padding: 4px 10px;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 0.7rem;
+        }
+
+        .clear-btn:hover {
+            background: #4d4d4d;
+            color: #fff;
+        }
+
+        /* Widget State Panel */
+        .state-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 10px;
+            padding: 10px;
+        }
+
+        .state-item {
+            background: #2a2a2a;
+            padding: 10px;
+            border-radius: 8px;
+        }
+
+        .state-label {
+            color: #888;
+            font-size: 0.7rem;
+            margin-bottom: 4px;
+        }
+
+        .state-value {
+            color: #fff;
+            font-size: 0.85rem;
+            font-weight: 500;
+        }
+
+        .state-value.online {
+            color: #28a745;
+        }
+
+        .state-value.offline {
+            color: #dc3545;
+        }
+
+        .state-value.pending {
+            color: #ffc107;
+        }
+
+        /* Controls */
+        .controls {
+            margin-top: 15px;
+            display: flex;
+            gap: 8px;
+            flex-wrap: wrap;
+            justify-content: center;
+        }
+
+        .control-btn {
+            background: #667eea;
+            border: none;
+            color: white;
+            padding: 8px 16px;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 0.8rem;
+            transition: all 0.2s;
+        }
+
+        .control-btn:hover {
+            background: #5a6fd6;
+            transform: translateY(-1px);
+        }
+
+        .control-btn.secondary {
+            background: #3d3d3d;
+        }
+
+        .control-btn.secondary:hover {
+            background: #4d4d4d;
+        }
+
+        /* Scrollbar */
+        .panel-content::-webkit-scrollbar {
+            width: 6px;
+        }
+
+        .panel-content::-webkit-scrollbar-track {
+            background: #1e1e1e;
+        }
+
+        .panel-content::-webkit-scrollbar-thumb {
+            background: #4d4d4d;
+            border-radius: 3px;
+        }
+
+        .instructions {
+            text-align: left;
+            background: #e8f4fd;
+            border-radius: 10px;
+            padding: 15px;
+            margin-top: 15px;
+        }
+
+        .instructions h3 {
+            color: #0066cc;
+            font-size: 0.85rem;
+            margin-bottom: 8px;
+        }
+
+        .instructions p {
+            color: #555;
+            font-size: 0.8rem;
+            line-height: 1.5;
+        }
+    </style>
+</head>
+<body>
+    <div class="top-section">
+        <div class="container">
+            <span class="badge">Fast Pace Health</span>
+            <span class="badge debug-badge">Debug Mode</span>
+            <h1>Webex Connect Chatbot</h1>
+            <p class="subtitle">Testing Environment with Live Debugging</p>
+
+            <div class="status-card">
+                <div class="status-indicator">
+                    <span class="status-dot" id="statusDot"></span>
+                    <span id="statusText">Initializing...</span>
+                </div>
+            </div>
+
+            <div class="state-grid">
+                <div class="state-item">
+                    <div class="state-label">Widget State</div>
+                    <div class="state-value pending" id="widgetState">Loading</div>
+                </div>
+                <div class="state-item">
+                    <div class="state-label">Script Loaded</div>
+                    <div class="state-value pending" id="scriptState">Pending</div>
+                </div>
+                <div class="state-item">
+                    <div class="state-label">Network Calls</div>
+                    <div class="state-value" id="networkCount">0</div>
+                </div>
+                <div class="state-item">
+                    <div class="state-label">Messages</div>
+                    <div class="state-value" id="messageCount">0</div>
+                </div>
+            </div>
+
+            <div class="controls">
+                <button class="control-btn" onclick="debugTools.reloadWidget()">Reload Widget</button>
+                <button class="control-btn secondary" onclick="debugTools.clearAllLogs()">Clear Logs</button>
+                <button class="control-btn secondary" onclick="debugTools.exportLogs()">Export Logs</button>
+            </div>
+
+            <div class="instructions">
+                <h3>Debug Panel Info</h3>
+                <p>
+                    Console logs, network activity, postMessages, and widget events are captured below.
+                    Use browser DevTools (F12) for additional inspection.
+                </p>
+            </div>
+        </div>
+
+        <div class="debug-panels">
+            <!-- Console Log Panel -->
+            <div class="debug-panel">
+                <div class="panel-header">
+                    <span class="panel-title"><span class="icon">&#128221;</span> Console Logs</span>
+                    <span class="panel-count" id="consoleCount">0</span>
+                </div>
+                <div class="panel-content" id="consoleLogs"></div>
+            </div>
+
+            <!-- PostMessage Panel -->
+            <div class="debug-panel">
+                <div class="panel-header">
+                    <span class="panel-title"><span class="icon">&#128233;</span> PostMessages</span>
+                    <span class="panel-count" id="postMessageCount">0</span>
+                </div>
+                <div class="panel-content" id="postMessageLogs"></div>
+            </div>
+
+            <!-- Network Panel -->
+            <div class="debug-panel">
+                <div class="panel-header">
+                    <span class="panel-title"><span class="icon">&#127760;</span> Network Activity</span>
+                    <span class="panel-count" id="networkLogCount">0</span>
+                </div>
+                <div class="panel-content" id="networkLogs"></div>
+            </div>
+
+            <!-- Widget Events Panel -->
+            <div class="debug-panel">
+                <div class="panel-header">
+                    <span class="panel-title"><span class="icon">&#9889;</span> Widget Events</span>
+                    <span class="panel-count" id="eventCount">0</span>
+                </div>
+                <div class="panel-content" id="eventLogs"></div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Webex Connect Chatbot Widget -->
+    <div id="divicw" data-bind="BDA10ED6-14B4-41E8-A74C-62E0E5895C78" data-org="" data-guid="8da474ae-5313-4b52-a2c6-fd6cbf02e5c8"></div>
+
+    <script>
+        // Debug Tools Object
+        const debugTools = {
+            logs: {
+                console: [],
+                postMessage: [],
+                network: [],
+                events: []
+            },
+
+            addLog: function(type, message, data = null, logType = 'info') {
+                const timestamp = new Date().toISOString();
+                const entry = { timestamp, message, data, logType };
+                this.logs[type].push(entry);
+                this.renderLog(type, entry);
+                this.updateCounts();
+            },
+
+            renderLog: function(type, entry) {
+                const container = document.getElementById(type + 'Logs') || document.getElementById(type === 'console' ? 'consoleLogs' : type + 'Logs');
+                if (!container) return;
+
+                const div = document.createElement('div');
+                div.className = `log-entry ${entry.logType}`;
+
+                let html = `<div class="log-time">${entry.timestamp}</div>`;
+                html += `<div class="log-message">${this.escapeHtml(entry.message)}</div>`;
+
+                if (entry.data) {
+                    try {
+                        const jsonStr = typeof entry.data === 'string' ? entry.data : JSON.stringify(entry.data, null, 2);
+                        html += `<div class="log-json">${this.escapeHtml(jsonStr)}</div>`;
+                    } catch (e) {
+                        html += `<div class="log-json">[Unable to stringify data]</div>`;
+                    }
+                }
+
+                div.innerHTML = html;
+                container.appendChild(div);
+                container.scrollTop = container.scrollHeight;
+            },
+
+            escapeHtml: function(text) {
+                const div = document.createElement('div');
+                div.textContent = text;
+                return div.innerHTML;
+            },
+
+            updateCounts: function() {
+                document.getElementById('consoleCount').textContent = this.logs.console.length;
+                document.getElementById('postMessageCount').textContent = this.logs.postMessage.length;
+                document.getElementById('networkLogCount').textContent = this.logs.network.length;
+                document.getElementById('networkCount').textContent = this.logs.network.length;
+                document.getElementById('eventCount').textContent = this.logs.events.length;
+                document.getElementById('messageCount').textContent = this.logs.postMessage.length;
+            },
+
+            clearAllLogs: function() {
+                this.logs = { console: [], postMessage: [], network: [], events: [] };
+                ['consoleLogs', 'postMessageLogs', 'networkLogs', 'eventLogs'].forEach(id => {
+                    document.getElementById(id).innerHTML = '';
+                });
+                this.updateCounts();
+                this.addLog('console', 'Logs cleared', null, 'info');
+            },
+
+            exportLogs: function() {
+                const exportData = {
+                    exportTime: new Date().toISOString(),
+                    userAgent: navigator.userAgent,
+                    url: window.location.href,
+                    logs: this.logs
+                };
+                const blob = new Blob([JSON.stringify(exportData, null, 2)], { type: 'application/json' });
+                const url = URL.createObjectURL(blob);
+                const a = document.createElement('a');
+                a.href = url;
+                a.download = `webex-debug-${Date.now()}.json`;
+                a.click();
+                URL.revokeObjectURL(url);
+                this.addLog('events', 'Logs exported', null, 'success');
+            },
+
+            reloadWidget: function() {
+                this.addLog('events', 'Reloading widget...', null, 'info');
+                const existingScript = document.querySelector('script[src*="imichatinit.js"]');
+                if (existingScript) existingScript.remove();
+
+                // Remove existing widget elements
+                const widgetElements = document.querySelectorAll('[id*="icw"], [class*="icw"], iframe[src*="imi"]');
+                widgetElements.forEach(el => el.remove());
+
+                // Re-initialize
+                setTimeout(() => initWidget(), 500);
+            },
+
+            updateWidgetState: function(state, isOnline) {
+                const el = document.getElementById('widgetState');
+                el.textContent = state;
+                el.className = 'state-value ' + (isOnline ? 'online' : (state === 'Loading' ? 'pending' : 'offline'));
+            },
+
+            updateScriptState: function(state, isLoaded) {
+                const el = document.getElementById('scriptState');
+                el.textContent = state;
+                el.className = 'state-value ' + (isLoaded ? 'online' : 'pending');
+            },
+
+            updateStatus: function(text, color) {
+                document.getElementById('statusText').textContent = text;
+                document.getElementById('statusDot').style.background = color;
+            }
+        };
+
+        // Override console methods to capture logs
+        const originalConsole = {
+            log: console.log.bind(console),
+            error: console.error.bind(console),
+            warn: console.warn.bind(console),
+            info: console.info.bind(console)
+        };
+
+        console.log = function(...args) {
+            originalConsole.log(...args);
+            debugTools.addLog('console', args.map(a => typeof a === 'object' ? JSON.stringify(a) : String(a)).join(' '), null, 'info');
+        };
+
+        console.error = function(...args) {
+            originalConsole.error(...args);
+            debugTools.addLog('console', args.map(a => typeof a === 'object' ? JSON.stringify(a) : String(a)).join(' '), null, 'error');
+        };
+
+        console.warn = function(...args) {
+            originalConsole.warn(...args);
+            debugTools.addLog('console', args.map(a => typeof a === 'object' ? JSON.stringify(a) : String(a)).join(' '), null, 'warn');
+        };
+
+        console.info = function(...args) {
+            originalConsole.info(...args);
+            debugTools.addLog('console', args.map(a => typeof a === 'object' ? JSON.stringify(a) : String(a)).join(' '), null, 'info');
+        };
+
+        // Intercept postMessage
+        window.addEventListener('message', function(event) {
+            let data = event.data;
+            let displayData = data;
+
+            try {
+                if (typeof data === 'string' && (data.startsWith('{') || data.startsWith('['))) {
+                    displayData = JSON.parse(data);
+                }
+            } catch (e) {}
+
+            debugTools.addLog('postMessage', `Origin: ${event.origin}`, displayData, 'postmessage');
+        }, false);
+
+        // Intercept XHR requests
+        const originalXHR = window.XMLHttpRequest;
+        window.XMLHttpRequest = function() {
+            const xhr = new originalXHR();
+            const originalOpen = xhr.open.bind(xhr);
+            const originalSend = xhr.send.bind(xhr);
+
+            xhr.open = function(method, url, ...rest) {
+                xhr._debugUrl = url;
+                xhr._debugMethod = method;
+                return originalOpen(method, url, ...rest);
+            };
+
+            xhr.send = function(body) {
+                const startTime = Date.now();
+
+                xhr.addEventListener('load', function() {
+                    const duration = Date.now() - startTime;
+                    let responseData = null;
+                    try {
+                        responseData = JSON.parse(xhr.responseText);
+                    } catch (e) {
+                        responseData = xhr.responseText?.substring(0, 500);
+                    }
+
+                    debugTools.addLog('network',
+                        `${xhr._debugMethod} ${xhr._debugUrl} - ${xhr.status} (${duration}ms)`,
+                        { status: xhr.status, response: responseData, requestBody: body },
+                        xhr.status >= 400 ? 'error' : 'network'
+                    );
+                });
+
+                xhr.addEventListener('error', function() {
+                    debugTools.addLog('network',
+                        `${xhr._debugMethod} ${xhr._debugUrl} - FAILED`,
+                        { error: 'Network Error' },
+                        'error'
+                    );
+                });
+
+                return originalSend(body);
+            };
+
+            return xhr;
+        };
+
+        // Intercept Fetch requests
+        const originalFetch = window.fetch;
+        window.fetch = function(url, options = {}) {
+            const startTime = Date.now();
+            const method = options.method || 'GET';
+
+            return originalFetch(url, options).then(response => {
+                const duration = Date.now() - startTime;
+                const clonedResponse = response.clone();
+
+                clonedResponse.text().then(text => {
+                    let responseData = null;
+                    try {
+                        responseData = JSON.parse(text);
+                    } catch (e) {
+                        responseData = text?.substring(0, 500);
+                    }
+
+                    debugTools.addLog('network',
+                        `${method} ${url} - ${response.status} (${duration}ms)`,
+                        { status: response.status, response: responseData },
+                        response.status >= 400 ? 'error' : 'network'
+                    );
+                }).catch(() => {});
+
+                return response;
+            }).catch(error => {
+                debugTools.addLog('network',
+                    `${method} ${url} - FAILED`,
+                    { error: error.message },
+                    'error'
+                );
+                throw error;
+            });
+        };
+
+        // Watch for DOM changes (widget insertion)
+        const observer = new MutationObserver(function(mutations) {
+            mutations.forEach(function(mutation) {
+                mutation.addedNodes.forEach(function(node) {
+                    if (node.nodeType === 1) {
+                        if (node.tagName === 'IFRAME' || node.id?.includes('icw') || node.className?.includes('icw')) {
+                            debugTools.addLog('events', `Widget element added: ${node.tagName} ${node.id || node.className}`, null, 'success');
+                        }
+                    }
+                });
+            });
+        });
+
+        observer.observe(document.body, { childList: true, subtree: true });
+
+        // Widget initialization
+        function initWidget() {
+            debugTools.addLog('events', 'Starting widget initialization...', null, 'info');
+            debugTools.updateStatus('Loading...', '#ffc107');
+
+            try {
+                var e = document.getElementById("divicw");
+                var t = document.createElement("script");
+                t.src = "https://media.imi.chat/widget/js/imichatinit.js?t=" + new Date().toISOString();
+
+                debugTools.addLog('network', `Loading script: ${t.src}`, null, 'network');
+
+                e.insertAdjacentElement("afterend", t);
+
+                t.addEventListener("load", function() {
+                    debugTools.addLog('events', 'Livechat script loaded successfully!', null, 'success');
+                    debugTools.updateStatus('Widget Ready', '#28a745');
+                    debugTools.updateWidgetState('Ready', true);
+                    debugTools.updateScriptState('Loaded', true);
+
+                    // Check for widget API
+                    setTimeout(() => {
+                        if (window.IMIchat || window.icw) {
+                            debugTools.addLog('events', 'Widget API detected', {
+                                IMIchat: !!window.IMIchat,
+                                icw: !!window.icw
+                            }, 'success');
+                        }
+                    }, 2000);
+                });
+
+                t.addEventListener("error", function(err) {
+                    debugTools.addLog('events', 'Error loading Livechat script', err, 'error');
+                    debugTools.updateStatus('Widget Failed', '#dc3545');
+                    debugTools.updateWidgetState('Failed', false);
+                    debugTools.updateScriptState('Error', false);
+                    showFallback(e);
+                });
+            } catch (err) {
+                debugTools.addLog('console', `Initialization error: ${err.message}`, err.stack, 'error');
+            }
+        }
+
+        function showFallback(e) {
+            e.insertAdjacentHTML("afterend", '<iframe id="tls_al_frm" frameborder="0" style="overflow:hidden;height:208px;width:394px;position:fixed;display:block;right:48px;bottom:12px;z-index:99999;"></iframe>');
+            var t = document.getElementById("tls_al_frm"),
+                n = t.contentWindow,
+                d = n.document;
+            d.open();
+            d.write("<!doctype html><html><head><meta charset='utf-8'><title>Error</title><style>body{font-family:'Helvetica Neue',Helvetica,Arial,sans-serif;color:#99a0b0;font-size:14px}.popover__content{background-color:#fbfbfe;padding:1.5rem;border-radius:5px;width:300px;box-shadow:0 2px 5px 0 rgba(0,0,0,0.26);position:relative}.popover__message{font-weight:600;color:#56627c;font-size:16px}.pull-left{float:left}.clearfix{clear:both}.hdr-txt{width:218px;margin-top:3px}.close-btn{position:absolute;right:15px;top:15px}.close-btn a{text-decoration:none;font-weight:400;color:#56627c;font-size:16px}</style></head><body><div class='popover__content'><div class='close-btn'><a href='#' onclick='closeTLSAlert()'>X</a></div><div class='popover__message'><div class='pull-left hdr-txt'>This browser version is not supported on LiveChat.</div></div><div class='clearfix'></div><p>Please update your browser to the latest version.</p></div><script>function closeTLSAlert(){window.parent.postMessage({key:'close_tls_alert',value:'close_tls_alert',action:'close_tls_alert'},'*');}<\/script></body></html>");
+            d.close();
+        }
+
+        // Global error handler
+        window.addEventListener('error', function(event) {
+            debugTools.addLog('console', `Global Error: ${event.message}`, {
+                filename: event.filename,
+                lineno: event.lineno,
+                colno: event.colno
+            }, 'error');
+        });
+
+        window.addEventListener('unhandledrejection', function(event) {
+            debugTools.addLog('console', `Unhandled Promise Rejection: ${event.reason}`, null, 'error');
+        });
+
+        // Initialize
+        debugTools.addLog('events', 'Debug tools initialized', { userAgent: navigator.userAgent }, 'success');
+        initWidget();
+    </script>
+</body>
+</html>
