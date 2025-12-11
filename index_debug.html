@@ -40,6 +40,271 @@
             font-weight: 600;
         }
 
+        /* Help Button - Top Right */
+        .help-btn {
+            position: fixed;
+            top: 15px;
+            right: calc(25% + 15px);
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border: none;
+            padding: 10px 16px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 0.8rem;
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            z-index: 1000;
+            box-shadow: 0 4px 15px rgba(102, 126, 234, 0.4);
+            transition: all 0.3s ease;
+        }
+        .help-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(102, 126, 234, 0.5);
+        }
+
+        /* Help Panel - Slides from Left */
+        .help-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 75%;
+            height: 100vh;
+            background: rgba(0,0,0,0.5);
+            z-index: 9998;
+            opacity: 0;
+            visibility: hidden;
+            transition: opacity 0.3s ease;
+        }
+        .help-overlay.show {
+            opacity: 1;
+            visibility: visible;
+        }
+
+        .help-panel {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 70%;
+            max-width: 900px;
+            height: 100vh;
+            background: #1a1a2e;
+            z-index: 9999;
+            transform: translateX(-100%);
+            transition: transform 0.3s ease;
+            display: flex;
+            box-shadow: 5px 0 30px rgba(0,0,0,0.5);
+        }
+        .help-panel.show {
+            transform: translateX(0);
+        }
+
+        /* Help Navigation Sidebar */
+        .help-nav {
+            width: 220px;
+            background: #12121f;
+            padding: 20px 0;
+            overflow-y: auto;
+            flex-shrink: 0;
+        }
+        .help-nav-header {
+            padding: 0 20px 20px;
+            border-bottom: 1px solid #2d2d4a;
+            margin-bottom: 10px;
+        }
+        .help-nav-header h2 {
+            color: #fff;
+            font-size: 1.1rem;
+            margin-bottom: 4px;
+        }
+        .help-nav-header p {
+            color: #888;
+            font-size: 0.7rem;
+        }
+        .help-nav-section {
+            padding: 8px 20px;
+            color: #667eea;
+            font-size: 0.65rem;
+            text-transform: uppercase;
+            font-weight: 600;
+            letter-spacing: 0.5px;
+        }
+        .help-nav-item {
+            padding: 10px 20px;
+            color: #aaa;
+            font-size: 0.8rem;
+            cursor: pointer;
+            transition: all 0.2s;
+            border-left: 3px solid transparent;
+        }
+        .help-nav-item:hover {
+            background: #1e1e34;
+            color: #fff;
+        }
+        .help-nav-item.active {
+            background: #1e1e34;
+            color: #667eea;
+            border-left-color: #667eea;
+        }
+
+        /* Help Content Area */
+        .help-content {
+            flex: 1;
+            overflow-y: auto;
+            padding: 30px;
+        }
+        .help-close {
+            position: absolute;
+            top: 15px;
+            right: 15px;
+            background: #2d2d4a;
+            border: none;
+            color: #888;
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            cursor: pointer;
+            font-size: 1.2rem;
+            transition: all 0.2s;
+        }
+        .help-close:hover {
+            background: #667eea;
+            color: #fff;
+        }
+
+        .help-section {
+            display: none;
+        }
+        .help-section.active {
+            display: block;
+        }
+        .help-section h2 {
+            color: #fff;
+            font-size: 1.4rem;
+            margin-bottom: 8px;
+        }
+        .help-section h3 {
+            color: #667eea;
+            font-size: 1rem;
+            margin: 24px 0 12px;
+            padding-bottom: 8px;
+            border-bottom: 1px solid #2d2d4a;
+        }
+        .help-section h4 {
+            color: #fff;
+            font-size: 0.9rem;
+            margin: 16px 0 8px;
+        }
+        .help-section p {
+            color: #bbb;
+            font-size: 0.85rem;
+            line-height: 1.6;
+            margin-bottom: 12px;
+        }
+        .help-section ul, .help-section ol {
+            color: #bbb;
+            font-size: 0.85rem;
+            line-height: 1.8;
+            margin: 12px 0 12px 20px;
+        }
+        .help-section li {
+            margin-bottom: 6px;
+        }
+        .help-section code {
+            background: #2d2d4a;
+            color: #9cdcfe;
+            padding: 2px 6px;
+            border-radius: 4px;
+            font-family: 'Monaco', 'Menlo', monospace;
+            font-size: 0.8rem;
+        }
+        .help-section pre {
+            background: #12121f;
+            border: 1px solid #2d2d4a;
+            border-radius: 8px;
+            padding: 16px;
+            overflow-x: auto;
+            margin: 12px 0;
+        }
+        .help-section pre code {
+            background: none;
+            padding: 0;
+            color: #9cdcfe;
+            font-size: 0.75rem;
+            line-height: 1.5;
+        }
+        .help-tip {
+            background: linear-gradient(135deg, rgba(102, 126, 234, 0.1) 0%, rgba(118, 75, 162, 0.1) 100%);
+            border-left: 4px solid #667eea;
+            padding: 12px 16px;
+            border-radius: 0 8px 8px 0;
+            margin: 16px 0;
+        }
+        .help-tip p {
+            color: #ddd;
+            margin: 0;
+        }
+        .help-warning {
+            background: rgba(255, 193, 7, 0.1);
+            border-left: 4px solid #ffc107;
+            padding: 12px 16px;
+            border-radius: 0 8px 8px 0;
+            margin: 16px 0;
+        }
+        .help-warning p {
+            color: #ffc107;
+            margin: 0;
+        }
+        .help-link {
+            color: #667eea;
+            text-decoration: none;
+        }
+        .help-link:hover {
+            text-decoration: underline;
+        }
+        .tool-card {
+            background: #1e1e34;
+            border: 1px solid #2d2d4a;
+            border-radius: 10px;
+            padding: 16px;
+            margin: 12px 0;
+        }
+        .tool-card h4 {
+            color: #667eea;
+            margin: 0 0 8px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        .tool-card p {
+            margin: 0;
+            font-size: 0.8rem;
+        }
+        .config-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 12px 0;
+            font-size: 0.8rem;
+        }
+        .config-table th, .config-table td {
+            border: 1px solid #2d2d4a;
+            padding: 10px;
+            text-align: left;
+        }
+        .config-table th {
+            background: #1e1e34;
+            color: #667eea;
+            font-weight: 600;
+        }
+        .config-table td {
+            color: #bbb;
+        }
+        .config-table code {
+            font-size: 0.75rem;
+        }
+
         /* Left Sidebar - Status & Controls */
         .sidebar {
             grid-row: 1 / 3;
@@ -603,6 +868,515 @@
     </style>
 </head>
 <body>
+    <!-- Help Button -->
+    <button class="help-btn" onclick="helpPanel.toggle()">
+        <span>&#128218;</span> Documentation
+    </button>
+
+    <!-- Help Panel Overlay -->
+    <div class="help-overlay" id="helpOverlay" onclick="helpPanel.close()"></div>
+
+    <!-- Help Panel -->
+    <div class="help-panel" id="helpPanel">
+        <button class="help-close" onclick="helpPanel.close()">&times;</button>
+
+        <!-- Navigation -->
+        <nav class="help-nav">
+            <div class="help-nav-header">
+                <h2>Debug Dashboard</h2>
+                <p>Documentation & Help</p>
+            </div>
+
+            <div class="help-nav-section">Getting Started</div>
+            <div class="help-nav-item active" data-section="overview">Overview</div>
+            <div class="help-nav-item" data-section="dashboard-tools">Dashboard Tools</div>
+
+            <div class="help-nav-section">Webex Connect</div>
+            <div class="help-nav-item" data-section="widget-sdk">Widget SDK Methods</div>
+            <div class="help-nav-item" data-section="widget-config">Widget Configuration</div>
+            <div class="help-nav-item" data-section="troubleshooting">Troubleshooting</div>
+
+            <div class="help-nav-section">Developer Reference</div>
+            <div class="help-nav-item" data-section="postmessage-api">PostMessage API</div>
+            <div class="help-nav-item" data-section="common-issues">Common Issues</div>
+            <div class="help-nav-item" data-section="resources">External Resources</div>
+        </nav>
+
+        <!-- Content -->
+        <div class="help-content">
+            <!-- Overview Section -->
+            <div class="help-section active" id="section-overview">
+                <h2>Debug Dashboard Overview</h2>
+                <p>This dashboard provides real-time debugging and monitoring tools for Webex Connect (IMI Chat) chatbot widgets. Use it to inspect widget communication, troubleshoot issues, and understand how your chatbot interacts with web pages.</p>
+
+                <h3>Dashboard Layout</h3>
+                <p>The dashboard is organized into four main areas:</p>
+                <ul>
+                    <li><strong>Left Sidebar</strong> - Widget status, session info, filters, and widget configuration details</li>
+                    <li><strong>Console Logs</strong> - Captures all JavaScript console output from the page</li>
+                    <li><strong>PostMessages</strong> - Shows cross-origin communication between the widget iframe and parent page</li>
+                    <li><strong>Network &amp; Events</strong> - Tracks HTTP requests and widget lifecycle events</li>
+                </ul>
+
+                <div class="help-tip">
+                    <p><strong>Tip:</strong> The right 25% of the screen is reserved for the chatbot widget. You can interact with the chatbot while viewing debug information.</p>
+                </div>
+
+                <h3>Quick Start</h3>
+                <ol>
+                    <li>Open this page - the widget loads automatically</li>
+                    <li>Watch the <strong>PostMessages</strong> panel for widget initialization</li>
+                    <li>Look for <code>loadstyles</code> action to confirm config received</li>
+                    <li>Use <strong>Full Report</strong> to export all debug data</li>
+                </ol>
+            </div>
+
+            <!-- Dashboard Tools Section -->
+            <div class="help-section" id="section-dashboard-tools">
+                <h2>Dashboard Tools</h2>
+                <p>Each panel and button in the dashboard serves a specific debugging purpose.</p>
+
+                <h3>Sidebar Controls</h3>
+
+                <div class="tool-card">
+                    <h4><span>&#8635;</span> Reload Widget</h4>
+                    <p>Removes the current widget instance and reinitializes it. Useful for testing initialization sequences or recovering from errors. Clears the widget iframe and reloads the IMI Chat script.</p>
+                </div>
+
+                <div class="tool-card">
+                    <h4><span>&#128465;</span> Clear</h4>
+                    <p>Clears all logged data from every panel. Use this to start fresh when debugging a specific interaction sequence.</p>
+                </div>
+
+                <div class="tool-card">
+                    <h4><span>&#128190;</span> Export</h4>
+                    <p>Downloads all captured logs as a JSON file. The export includes session info, widget config, and all panel data with timestamps.</p>
+                </div>
+
+                <h3>Quick Actions</h3>
+
+                <div class="tool-card">
+                    <h4><span>&#128269;</span> Inspect</h4>
+                    <p>Logs current widget state to the Events panel. Shows: DOM presence of widget elements, iframe count, IMI objects, and whether config has been received.</p>
+                </div>
+
+                <div class="tool-card">
+                    <h4><span>&#128225;</span> Ping</h4>
+                    <p>Tests connectivity to IMI servers by sending a HEAD request to <code>media.imi.chat</code>. Reports latency in milliseconds or connection failure.</p>
+                </div>
+
+                <div class="tool-card">
+                    <h4><span>&#128203;</span> Full Report</h4>
+                    <p>Copies a comprehensive JSON report to clipboard. Includes environment info, widget config, and <strong>filtered logs</strong> (noise removed). Perfect for sharing with support teams.</p>
+                </div>
+
+                <div class="tool-card">
+                    <h4><span>&#9881;</span> Copy Config</h4>
+                    <p>Copies just the widget configuration JSON. Only available after the <code>loadstyles</code> PostMessage is received.</p>
+                </div>
+
+                <h3>Filter Controls</h3>
+                <p>Located in the sidebar, these checkboxes control what appears in the PostMessages panel:</p>
+                <ul>
+                    <li><strong>Hide React DevTools noise</strong> - Filters out browser extension messages</li>
+                    <li><strong>Hide debug_panel test msgs</strong> - Filters dashboard's own test messages</li>
+                    <li><strong>Collapse repeated messages</strong> - Groups identical consecutive messages with a count badge</li>
+                </ul>
+
+                <h3>Panel Features</h3>
+                <p>Each debug panel includes:</p>
+                <ul>
+                    <li><strong>Counter badge</strong> - Shows number of logged entries</li>
+                    <li><strong>Copy button</strong> - Copies all panel entries as JSON</li>
+                    <li><strong>Per-entry copy</strong> - Hover over any entry to reveal its copy button</li>
+                    <li><strong>Color coding</strong> - Boolean values show green (true) or red (false)</li>
+                    <li><strong>Source tags</strong> - WIDGET, BROWSER, or DEBUG labels on PostMessages</li>
+                </ul>
+            </div>
+
+            <!-- Widget SDK Methods Section -->
+            <div class="help-section" id="section-widget-sdk">
+                <h2>IMI Chat Widget SDK Methods</h2>
+                <p>The Webex Engage LiveChat widget exposes JavaScript SDK methods to control its behavior. These methods are available on the global <code>imichatwidget</code> object.</p>
+
+                <h3>imichatwidget.show()</h3>
+                <p>Displays the chat widget. Use this when you've hidden the widget by default and want to show it programmatically (e.g., on button click).</p>
+                <pre><code>// Show the widget when user clicks a button
+document.getElementById('chatBtn').onclick = function() {
+    imichatwidget.show();
+};</code></pre>
+
+                <h3>imichatwidget.hide()</h3>
+                <p>Hides the chat widget from view. The widget remains loaded but invisible.</p>
+                <pre><code>imichatwidget.hide();</code></pre>
+
+                <h3>imichatwidget.init(data, callback)</h3>
+                <p>Initializes the widget with custom data. Pass custom chat fields that will be attached to all conversations.</p>
+                <pre><code>var data = JSON.stringify({
+    "custom_chat_fields": {
+        "Customer ID": "12345",
+        "Plan Type": "Premium"
+    }
+});
+
+imichatwidget.init(data, function(response) {
+    console.log('Widget initialized', response);
+});</code></pre>
+
+                <div class="help-warning">
+                    <p><strong>Note:</strong> Custom field keys must be configured in the Webex Engage Admin Console before use. Unknown keys are silently ignored.</p>
+                </div>
+
+                <h3>imichatwidget.update(data, callback)</h3>
+                <p>Updates custom chat fields after initialization. Behaves similarly to <code>init()</code>.</p>
+                <pre><code>var data = JSON.stringify({
+    "custom_chat_fields": {
+        "Page": "checkout",
+        "Cart Value": "$150"
+    }
+});
+
+imichatwidget.update(data, function(response) {
+    console.log('Fields updated');
+});</code></pre>
+
+                <h3>imichatwidget.on(event, callback)</h3>
+                <p>Subscribe to widget events. The most common event is <code>imichat-widget:ready</code>.</p>
+                <pre><code>imichatwidget.on("imichat-widget:ready", function(appId) {
+    console.log('Widget ready, App ID:', appId);
+    // Safe to call other methods now
+    imichatwidget.show();
+    imichatwidget.maximizeWindow();
+});</code></pre>
+
+                <h3>imichatwidget.maximizeWindow()</h3>
+                <p>Expands the chat widget to its maximized state (full chat view).</p>
+
+                <h3>imichatwidget.minimizeWindow()</h3>
+                <p>Minimizes the chat widget to its collapsed state (just the launcher button).</p>
+
+                <h3>Complete Example</h3>
+                <pre><code>&lt;!-- Widget container (hidden by default) --&gt;
+&lt;div id="divicw"
+     data-bind="YOUR-BIND-ID"
+     data-guid="YOUR-GUID"
+     style="display:none;"&gt;&lt;/div&gt;
+
+&lt;!-- Custom chat button --&gt;
+&lt;button id="openChat"&gt;Need Help?&lt;/button&gt;
+
+&lt;script&gt;
+// Wait for widget to be ready
+imichatwidget.on("imichat-widget:ready", function(appId) {
+    // Initialize with customer data
+    var customerData = JSON.stringify({
+        "custom_chat_fields": {
+            "User ID": getUserId(),
+            "Page": window.location.pathname
+        }
+    });
+
+    imichatwidget.init(customerData, function() {
+        // Enable the chat button
+        document.getElementById('openChat').disabled = false;
+    });
+});
+
+// Open chat on button click
+document.getElementById('openChat').onclick = function() {
+    imichatwidget.show();
+    imichatwidget.maximizeWindow();
+};
+&lt;/script&gt;
+
+&lt;!-- Load widget script --&gt;
+&lt;script src="https://media.imi.chat/widget/js/imichatinit.js"&gt;&lt;/script&gt;</code></pre>
+            </div>
+
+            <!-- Widget Configuration Section -->
+            <div class="help-section" id="section-widget-config">
+                <h2>Widget Configuration</h2>
+                <p>Widget configuration is received via PostMessage with the <code>loadstyles</code> action. This dashboard parses and displays key settings in the sidebar.</p>
+
+                <h3>Configuration Fields</h3>
+                <table class="config-table">
+                    <tr>
+                        <th>Field</th>
+                        <th>Description</th>
+                    </tr>
+                    <tr>
+                        <td><code>appid</code></td>
+                        <td>Unique application identifier for this widget instance</td>
+                    </tr>
+                    <tr>
+                        <td><code>name</code></td>
+                        <td>Display name configured for the widget</td>
+                    </tr>
+                    <tr>
+                        <td><code>website_id</code></td>
+                        <td>ID of the website this widget is registered for</td>
+                    </tr>
+                    <tr>
+                        <td><code>agent_avail</code></td>
+                        <td>Whether live agents are currently available (1 = yes, 0 = no)</td>
+                    </tr>
+                    <tr>
+                        <td><code>enable_proactive</code></td>
+                        <td>Whether proactive chat invitations are enabled</td>
+                    </tr>
+                    <tr>
+                        <td><code>isattachmentenabled</code></td>
+                        <td>Whether file attachments are allowed in chat</td>
+                    </tr>
+                    <tr>
+                        <td><code>isemojienable</code></td>
+                        <td>Whether emoji picker is available</td>
+                    </tr>
+                    <tr>
+                        <td><code>widget_lang</code></td>
+                        <td>Language code for widget UI text</td>
+                    </tr>
+                    <tr>
+                        <td><code>widgetcolor</code></td>
+                        <td>Primary color theme (hex code)</td>
+                    </tr>
+                </table>
+
+                <h3>Installation Requirements</h3>
+                <p>To install the widget on your website:</p>
+                <ol>
+                    <li>Obtain your widget credentials from Webex Engage Admin Console</li>
+                    <li>Add the widget container div with your <code>data-bind</code> and <code>data-guid</code> values</li>
+                    <li>Include the IMI Chat initialization script</li>
+                    <li>Whitelist your domain in the Admin Console (without http/https prefix)</li>
+                </ol>
+
+                <pre><code>&lt;!-- Widget container --&gt;
+&lt;div id="divicw"
+     data-bind="YOUR-BIND-ID"
+     data-guid="YOUR-WIDGET-GUID"&gt;&lt;/div&gt;
+
+&lt;!-- Widget script (add before closing body tag) --&gt;
+&lt;script src="https://media.imi.chat/widget/js/imichatinit.js"&gt;&lt;/script&gt;</code></pre>
+
+                <h3>Domain Whitelisting</h3>
+                <p>Configure your domain in General Settings using patterns like:</p>
+                <ul>
+                    <li><code>*.example.com</code> - All subdomains</li>
+                    <li><code>www.example.com</code> - Specific subdomain</li>
+                    <li><code>example.com</code> - Root domain only</li>
+                </ul>
+                <div class="help-warning">
+                    <p><strong>Important:</strong> Do not include http:// or https:// in the domain configuration.</p>
+                </div>
+
+                <h3>24/7 Availability</h3>
+                <p>To make the widget available outside business hours:</p>
+                <ol>
+                    <li>Go to Admin Console &gt; LiveChat Channel settings</li>
+                    <li>Enable "Suppress working hours and agent presence checks"</li>
+                    <li>The widget will now be available regardless of agent availability</li>
+                </ol>
+            </div>
+
+            <!-- Troubleshooting Section -->
+            <div class="help-section" id="section-troubleshooting">
+                <h2>Troubleshooting Guide</h2>
+                <p>Common issues and their solutions when working with the Webex Connect widget.</p>
+
+                <h3>Widget Not Appearing</h3>
+                <h4>Check the Console Logs panel for errors</h4>
+                <ul>
+                    <li><strong>404 on imichatinit.js</strong> - Verify the script URL is correct and accessible</li>
+                    <li><strong>CORS errors</strong> - Your domain may not be whitelisted in Admin Console</li>
+                    <li><strong>No errors but no widget</strong> - Check if <code>divicw</code> element exists with correct attributes</li>
+                </ul>
+
+                <h4>Check the PostMessages panel</h4>
+                <ul>
+                    <li><strong>No messages from imi.chat</strong> - Script may not have loaded successfully</li>
+                    <li><strong>loadstyles not received</strong> - Widget failed to initialize; check GUID and bind ID</li>
+                </ul>
+
+                <div class="help-tip">
+                    <p><strong>Tip:</strong> Use the Ping button to verify connectivity to IMI servers.</p>
+                </div>
+
+                <h3>Widget Loads But Chat Fails</h3>
+                <ul>
+                    <li><strong>agent_avail = 0</strong> - No agents are online; check team schedules</li>
+                    <li><strong>Connection timeout</strong> - Check Network panel for failed WebSocket connections</li>
+                    <li><strong>Blank chat window</strong> - May indicate bot configuration issue; check Webex Connect flows</li>
+                </ul>
+
+                <h3>Custom Fields Not Working</h3>
+                <ul>
+                    <li>Verify field names match exactly (case-sensitive) with Admin Console configuration</li>
+                    <li>Call <code>init()</code> or <code>update()</code> after <code>imichat-widget:ready</code> event</li>
+                    <li>Ensure data is properly JSON stringified</li>
+                </ul>
+
+                <h3>Performance Issues</h3>
+                <ul>
+                    <li><strong>Slow load</strong> - Add cache-busting parameter sparingly; remove for production</li>
+                    <li><strong>Memory issues</strong> - Avoid repeatedly calling init without page refresh</li>
+                    <li><strong>Duplicate widgets</strong> - Check for multiple script inclusions</li>
+                </ul>
+
+                <h3>Debug Checklist</h3>
+                <ol>
+                    <li>Is <code>divicw</code> present with correct <code>data-bind</code> and <code>data-guid</code>?</li>
+                    <li>Is the script tag loading from <code>media.imi.chat</code>?</li>
+                    <li>Does the domain match whitelist configuration?</li>
+                    <li>Are there any JavaScript errors in console?</li>
+                    <li>Is <code>loadstyles</code> PostMessage received?</li>
+                    <li>What does <code>agent_avail</code> show in config?</li>
+                    <li>Can you ping the IMI servers successfully?</li>
+                </ol>
+            </div>
+
+            <!-- PostMessage API Section -->
+            <div class="help-section" id="section-postmessage-api">
+                <h2>PostMessage Communication</h2>
+                <p>The widget communicates with the parent page using the browser's <code>postMessage</code> API. This dashboard intercepts and displays these messages for debugging.</p>
+
+                <h3>Message Structure</h3>
+                <p>Widget messages typically contain:</p>
+                <pre><code>{
+    "action": "actionName",
+    "message": "...",
+    "key": "...",
+    "value": "..."
+}</code></pre>
+
+                <h3>Common Actions</h3>
+                <table class="config-table">
+                    <tr>
+                        <th>Action</th>
+                        <th>Description</th>
+                    </tr>
+                    <tr>
+                        <td><code>loadstyles</code></td>
+                        <td>Widget configuration payload (JSON in message field)</td>
+                    </tr>
+                    <tr>
+                        <td><code>setlocal</code></td>
+                        <td>Widget storing data in localStorage (key/value)</td>
+                    </tr>
+                    <tr>
+                        <td><code>getlocal</code></td>
+                        <td>Widget retrieving data from localStorage</td>
+                    </tr>
+                    <tr>
+                        <td><code>resize</code></td>
+                        <td>Widget requesting size change</td>
+                    </tr>
+                    <tr>
+                        <td><code>maximize</code></td>
+                        <td>Widget expanding to full view</td>
+                    </tr>
+                    <tr>
+                        <td><code>minimize</code></td>
+                        <td>Widget collapsing to launcher</td>
+                    </tr>
+                </table>
+
+                <h3>Message Origins</h3>
+                <p>Messages come from different sources:</p>
+                <ul>
+                    <li><strong>media.imi.chat</strong> - Official widget messages (tagged as WIDGET)</li>
+                    <li><strong>Browser extensions</strong> - React DevTools, Redux tools, etc. (tagged as BROWSER)</li>
+                    <li><strong>Same origin</strong> - Your own page or this debug panel (tagged as DEBUG)</li>
+                </ul>
+
+                <h3>Fingerprint Tracking</h3>
+                <p>The widget generates a unique fingerprint for visitor tracking. Look for <code>setlocal</code> action with <code>key: "fingerprint"</code> to see this value. It's used to maintain conversation continuity across sessions.</p>
+
+                <h3>Filtering Noise</h3>
+                <p>Browser extensions often flood postMessage with their own communications. This dashboard automatically filters:</p>
+                <ul>
+                    <li>React DevTools "hello" messages</li>
+                    <li>Redux DevTools communications</li>
+                    <li>Messages from chrome-extension:// or moz-extension://</li>
+                </ul>
+                <p>Toggle filters in the sidebar to show or hide these messages.</p>
+            </div>
+
+            <!-- Common Issues Section -->
+            <div class="help-section" id="section-common-issues">
+                <h2>Common Issues Reference</h2>
+
+                <h3>Error: Widget GUID Not Found</h3>
+                <p><strong>Cause:</strong> The <code>data-guid</code> attribute doesn't match any registered widget.</p>
+                <p><strong>Solution:</strong> Verify the GUID in Webex Engage Admin Console under LiveChat assets.</p>
+
+                <h3>Error: Domain Not Whitelisted</h3>
+                <p><strong>Cause:</strong> The current page's domain isn't in the allowed list.</p>
+                <p><strong>Solution:</strong> Add your domain pattern to the widget's allowed domains in Admin Console.</p>
+
+                <h3>Error: Cross-Origin Frame Access Denied</h3>
+                <p><strong>Cause:</strong> Normal security behavior - you cannot directly access iframe content.</p>
+                <p><strong>Solution:</strong> This is expected. Use PostMessage API for communication.</p>
+
+                <h3>Warning: IMIchat is undefined</h3>
+                <p><strong>Cause:</strong> Trying to call widget methods before script loads.</p>
+                <p><strong>Solution:</strong> Wait for <code>imichat-widget:ready</code> event before calling methods.</p>
+
+                <h3>Issue: Chat History Not Showing</h3>
+                <p><strong>Cause:</strong> Conversation history may be disabled or fingerprint changed.</p>
+                <p><strong>Solution:</strong> Check Admin Console settings and verify localStorage isn't being cleared.</p>
+
+                <h3>Issue: Bot Not Responding</h3>
+                <p><strong>Possible causes:</strong></p>
+                <ul>
+                    <li>Flow not published in Webex Connect</li>
+                    <li>Bot integration webhook URL incorrect</li>
+                    <li>Error in bot flow logic</li>
+                    <li>Service account permissions</li>
+                </ul>
+                <p><strong>Debug:</strong> Check Webex Connect flow debugger and webhook logs.</p>
+            </div>
+
+            <!-- Resources Section -->
+            <div class="help-section" id="section-resources">
+                <h2>External Resources</h2>
+                <p>Official documentation and community resources for Webex Connect development.</p>
+
+                <h3>Official Documentation</h3>
+                <ul>
+                    <li><a href="https://docs.imi.chat/reference/introduction" target="_blank" class="help-link">Webex Engage Developer Guide</a> - API reference and SDK methods</li>
+                    <li><a href="https://docs.imi.chat/docs/livechat-channel" target="_blank" class="help-link">LiveChat Channel Setup</a> - Configuration guide</li>
+                    <li><a href="https://developer.webex.com/docs/webex-connect" target="_blank" class="help-link">Webex Connect Overview</a> - Platform documentation</li>
+                    <li><a href="https://developers.imiconnect.io/" target="_blank" class="help-link">IMI Connect API Docs</a> - Complete API reference</li>
+                    <li><a href="https://help.webexconnect.io/docs/livechat" target="_blank" class="help-link">LiveChat Platform Guide</a> - Webex Connect platform docs</li>
+                </ul>
+
+                <h3>SDK Reference Pages</h3>
+                <ul>
+                    <li><a href="https://docs.imi.chat/reference/imichatwidgetshow" target="_blank" class="help-link">imichatwidget.show()</a></li>
+                    <li><a href="https://docs.imi.chat/reference/imichatwidgetinit" target="_blank" class="help-link">imichatwidget.init()</a></li>
+                    <li><a href="https://docs.imi.chat/reference/imichatwidgetupdate" target="_blank" class="help-link">imichatwidget.update()</a></li>
+                    <li><a href="https://docs.imi.chat/reference/imichatwidgetonimichat-widgetready-func" target="_blank" class="help-link">imichatwidget.on()</a></li>
+                </ul>
+
+                <h3>Community &amp; Support</h3>
+                <ul>
+                    <li><a href="https://community.cisco.com/t5/webex-connect/bd-p/connect" target="_blank" class="help-link">Cisco Community Forum</a> - Developer community Q&amp;A</li>
+                    <li><a href="https://developer.webex.com/explore/docs/api/guides/troubleshooting" target="_blank" class="help-link">Webex Troubleshooting Guide</a></li>
+                </ul>
+
+                <h3>Testing Tools</h3>
+                <ul>
+                    <li><a href="https://glitch.com" target="_blank" class="help-link">Glitch.com</a> - Recommended for testing widgets without a live site</li>
+                </ul>
+
+                <div class="help-tip">
+                    <p><strong>Need help?</strong> Contact your customer success representative or email <a href="mailto:developers@webex.com" class="help-link">developers@webex.com</a></p>
+                </div>
+            </div>
+        </div>
+    </div>
+
     <div class="main-layout">
         <!-- Left Sidebar -->
         <div class="sidebar">
@@ -1512,6 +2286,63 @@
         // Initialize
         debugTools.addLog('events', 'Dashboard ready', { session: sessionUUID }, 'success');
         initWidget();
+
+        // Help Panel Controller
+        const helpPanel = {
+            panel: document.getElementById('helpPanel'),
+            overlay: document.getElementById('helpOverlay'),
+
+            toggle: function() {
+                if (this.panel.classList.contains('show')) {
+                    this.close();
+                } else {
+                    this.open();
+                }
+            },
+
+            open: function() {
+                this.panel.classList.add('show');
+                this.overlay.classList.add('show');
+                document.body.style.overflow = 'hidden';
+            },
+
+            close: function() {
+                this.panel.classList.remove('show');
+                this.overlay.classList.remove('show');
+                document.body.style.overflow = '';
+            },
+
+            navigateTo: function(sectionId) {
+                // Update nav items
+                document.querySelectorAll('.help-nav-item').forEach(item => {
+                    item.classList.remove('active');
+                });
+                document.querySelector(`.help-nav-item[data-section="${sectionId}"]`)?.classList.add('active');
+
+                // Update sections
+                document.querySelectorAll('.help-section').forEach(section => {
+                    section.classList.remove('active');
+                });
+                document.getElementById(`section-${sectionId}`)?.classList.add('active');
+
+                // Scroll content to top
+                document.querySelector('.help-content').scrollTop = 0;
+            }
+        };
+
+        // Add click handlers to nav items
+        document.querySelectorAll('.help-nav-item').forEach(item => {
+            item.addEventListener('click', function() {
+                helpPanel.navigateTo(this.dataset.section);
+            });
+        });
+
+        // Close on Escape key
+        document.addEventListener('keydown', function(e) {
+            if (e.key === 'Escape' && helpPanel.panel.classList.contains('show')) {
+                helpPanel.close();
+            }
+        });
     </script>
 </body>
 </html>
