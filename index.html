@@ -2006,11 +2006,17 @@ document.getElementById('openChat').onclick = function() {
         function getWidgetConfig() {
             const params = new URLSearchParams(window.location.search);
             const stored = JSON.parse(localStorage.getItem('widgetScopeConfig') || '{}');
+            const divicw = document.getElementById('divicw');
+            const embedded = {
+                guid: divicw?.getAttribute('data-guid') || '',
+                bind: divicw?.getAttribute('data-bind') || '',
+                org: divicw?.getAttribute('data-org') || ''
+            };
 
             return {
-                guid: params.get('guid') || stored.guid || '',
-                bind: params.get('bind') || stored.bind || '',
-                org: params.get('org') || stored.org || 'Your Organization'
+                guid: params.get('guid') || embedded.guid || stored.guid || '',
+                bind: params.get('bind') || embedded.bind || stored.bind || '',
+                org: params.get('org') || embedded.org || stored.org || 'Your Organization'
             };
         }
 
