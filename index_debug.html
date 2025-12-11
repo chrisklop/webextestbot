@@ -22,11 +22,28 @@
 
         .main-layout {
             display: grid;
-            grid-template-columns: 320px 1fr 1fr;
+            grid-template-columns: 260px 1fr 1fr 320px;
             grid-template-rows: calc(50vh - 25px) calc(50vh - 25px);
-            gap: 15px;
+            gap: 12px;
             height: calc(100vh - 30px);
             overflow: hidden;
+        }
+
+        /* Widget container - rightmost column, reserved space for chatbot */
+        .widget-column {
+            grid-row: 1 / 3;
+            position: relative;
+            min-width: 320px;
+        }
+
+        /* Boolean value highlighting */
+        .bool-true {
+            color: #28a745;
+            font-weight: 600;
+        }
+        .bool-false {
+            color: #dc3545;
+            font-weight: 600;
         }
 
         /* Left Sidebar - Status & Controls */
@@ -34,7 +51,7 @@
             grid-row: 1 / 3;
             display: flex;
             flex-direction: column;
-            gap: 15px;
+            gap: 12px;
             overflow-y: auto;
             max-height: calc(100vh - 30px);
         }
@@ -42,34 +59,34 @@
         .container {
             background: white;
             border-radius: 12px;
-            padding: 20px;
+            padding: 16px;
             box-shadow: 0 10px 40px rgba(0, 0, 0, 0.3);
         }
 
         h1 {
             color: #1a1a2e;
-            font-size: 1.3rem;
-            margin-bottom: 6px;
+            font-size: 1.2rem;
+            margin-bottom: 4px;
         }
 
         .subtitle {
             color: #666;
-            font-size: 0.85rem;
-            margin-bottom: 15px;
+            font-size: 0.8rem;
+            margin-bottom: 12px;
         }
 
         .status-card {
             background: #f8f9fa;
             border-radius: 8px;
-            padding: 12px;
-            margin-bottom: 12px;
+            padding: 10px;
+            margin-bottom: 10px;
         }
 
         .status-indicator {
             display: inline-flex;
             align-items: center;
             gap: 8px;
-            font-size: 0.85rem;
+            font-size: 0.8rem;
             color: #28a745;
         }
 
@@ -90,11 +107,11 @@
             display: inline-block;
             background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
             color: white;
-            padding: 4px 12px;
+            padding: 3px 10px;
             border-radius: 20px;
-            font-size: 0.7rem;
+            font-size: 0.65rem;
             font-weight: 600;
-            margin-bottom: 12px;
+            margin-bottom: 10px;
         }
 
         .debug-badge {
@@ -106,25 +123,25 @@
         .state-grid {
             display: grid;
             grid-template-columns: 1fr 1fr;
-            gap: 8px;
+            gap: 6px;
         }
 
         .state-item {
             background: #f8f9fa;
-            padding: 10px;
-            border-radius: 8px;
+            padding: 8px;
+            border-radius: 6px;
         }
 
         .state-label {
             color: #888;
-            font-size: 0.65rem;
+            font-size: 0.6rem;
             margin-bottom: 2px;
             text-transform: uppercase;
         }
 
         .state-value {
             color: #1a1a2e;
-            font-size: 0.9rem;
+            font-size: 0.85rem;
             font-weight: 600;
         }
 
@@ -136,23 +153,23 @@
         .controls {
             display: flex;
             flex-direction: column;
-            gap: 8px;
+            gap: 6px;
         }
 
         .control-btn {
             background: #667eea;
             border: none;
             color: white;
-            padding: 10px 16px;
-            border-radius: 8px;
+            padding: 8px 12px;
+            border-radius: 6px;
             cursor: pointer;
-            font-size: 0.8rem;
+            font-size: 0.75rem;
             font-weight: 500;
             transition: all 0.2s;
             display: flex;
             align-items: center;
             justify-content: center;
-            gap: 8px;
+            gap: 6px;
         }
 
         .control-btn:hover {
@@ -169,78 +186,104 @@
             background: #dee2e6;
         }
 
-        .control-btn.danger {
-            background: #dc3545;
-        }
-
-        .control-btn.danger:hover {
-            background: #c82333;
-        }
-
         .btn-row {
             display: flex;
-            gap: 8px;
+            gap: 6px;
         }
 
         .btn-row .control-btn {
             flex: 1;
         }
 
-        /* Environment Info Panel */
-        .env-panel {
+        /* Widget Config Panel */
+        .config-panel {
             background: #1e1e1e;
-            border-radius: 12px;
-            padding: 15px;
-            flex: 1;
+            border-radius: 10px;
+            padding: 12px;
         }
 
-        .env-panel h3 {
+        .config-panel h3 {
             color: #fff;
-            font-size: 0.85rem;
-            margin-bottom: 12px;
+            font-size: 0.8rem;
+            margin-bottom: 10px;
             display: flex;
             align-items: center;
-            gap: 8px;
+            gap: 6px;
         }
 
-        .env-item {
+        .config-item {
             display: flex;
             justify-content: space-between;
-            padding: 8px 0;
+            padding: 6px 0;
             border-bottom: 1px solid #333;
-            font-size: 0.75rem;
+            font-size: 0.7rem;
         }
 
-        .env-item:last-child {
+        .config-item:last-child {
             border-bottom: none;
         }
 
-        .env-label {
+        .config-label {
             color: #888;
         }
 
-        .env-value {
+        .config-value {
             color: #9cdcfe;
             font-family: 'Monaco', 'Menlo', monospace;
-            max-width: 150px;
+            max-width: 140px;
             overflow: hidden;
             text-overflow: ellipsis;
             white-space: nowrap;
         }
 
-        /* PostMessages Panel - Full Height Column */
-        .postmessage-column {
-            grid-row: 1 / 3;
+        .config-value.success { color: #28a745; }
+        .config-value.warning { color: #ffc107; }
+
+        /* Filter Toggle */
+        .filter-section {
+            background: #2d2d2d;
+            border-radius: 8px;
+            padding: 10px;
+            margin-bottom: 10px;
+        }
+
+        .filter-section h4 {
+            color: #fff;
+            font-size: 0.7rem;
+            margin-bottom: 8px;
+        }
+
+        .filter-toggle {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 0.7rem;
+            color: #aaa;
+            cursor: pointer;
+        }
+
+        .filter-toggle input {
+            cursor: pointer;
+        }
+
+        .filter-stats {
+            font-size: 0.65rem;
+            color: #666;
+            margin-top: 6px;
+        }
+
+        /* PostMessages Panel - now in right column top section */
+        .postmessage-panel {
             display: flex;
             flex-direction: column;
-            max-height: calc(100vh - 30px);
+            max-height: calc(50vh - 25px);
             overflow: hidden;
         }
 
         /* Debug Panel Styles */
         .debug-panel {
             background: #1e1e1e;
-            border-radius: 12px;
+            border-radius: 10px;
             overflow: hidden;
             display: flex;
             flex-direction: column;
@@ -251,7 +294,7 @@
 
         .panel-header {
             background: #2d2d2d;
-            padding: 10px 12px;
+            padding: 8px 10px;
             display: flex;
             justify-content: space-between;
             align-items: center;
@@ -261,7 +304,7 @@
 
         .panel-title {
             color: #fff;
-            font-size: 0.8rem;
+            font-size: 0.75rem;
             font-weight: 600;
             display: flex;
             align-items: center;
@@ -271,28 +314,32 @@
         .panel-actions {
             display: flex;
             align-items: center;
-            gap: 8px;
+            gap: 6px;
         }
 
         .panel-count {
             background: #667eea;
             color: white;
-            padding: 2px 8px;
-            border-radius: 10px;
-            font-size: 0.65rem;
+            padding: 2px 6px;
+            border-radius: 8px;
+            font-size: 0.6rem;
+        }
+
+        .panel-count.filtered {
+            background: #6c757d;
         }
 
         .copy-btn {
             background: #3d3d3d;
             border: none;
             color: #888;
-            padding: 4px 8px;
+            padding: 3px 6px;
             border-radius: 4px;
             cursor: pointer;
-            font-size: 0.65rem;
+            font-size: 0.6rem;
             display: flex;
             align-items: center;
-            gap: 4px;
+            gap: 3px;
             transition: all 0.2s;
         }
 
@@ -310,18 +357,18 @@
             flex: 1;
             overflow-y: auto;
             overflow-x: hidden;
-            padding: 8px;
+            padding: 6px;
             font-family: 'Monaco', 'Menlo', 'Ubuntu Mono', monospace;
-            font-size: 0.72rem;
+            font-size: 0.68rem;
             line-height: 1.4;
             min-height: 0;
             max-height: 100%;
         }
 
         .log-entry {
-            padding: 8px 10px;
-            margin: 4px 0;
-            border-radius: 6px;
+            padding: 6px 8px;
+            margin: 3px 0;
+            border-radius: 5px;
             background: #2a2a2a;
             border-left: 3px solid #667eea;
             position: relative;
@@ -331,19 +378,33 @@
             opacity: 1;
         }
 
+        .log-entry.collapsed {
+            opacity: 0.6;
+            padding: 4px 8px;
+        }
+
+        .collapse-count {
+            background: #667eea;
+            color: white;
+            padding: 1px 6px;
+            border-radius: 10px;
+            font-size: 0.6rem;
+            margin-left: 8px;
+        }
+
         .entry-copy-btn {
             position: absolute;
-            top: 6px;
-            right: 6px;
+            top: 4px;
+            right: 4px;
             opacity: 0;
             transition: opacity 0.2s;
             background: #3d3d3d;
             border: none;
             color: #888;
-            padding: 3px 6px;
+            padding: 2px 5px;
             border-radius: 3px;
             cursor: pointer;
-            font-size: 0.6rem;
+            font-size: 0.55rem;
         }
 
         .entry-copy-btn:hover {
@@ -377,14 +438,50 @@
             background: #1a2a2a;
         }
 
+        .log-entry.widget-message {
+            border-left-color: #28a745;
+            background: #1a2a1a;
+            border-left-width: 4px;
+        }
+
+        .log-entry.browser-noise {
+            border-left-color: #6c757d;
+            background: #252525;
+            opacity: 0.7;
+        }
+
         .log-entry.network {
             border-left-color: #fd7e14;
             background: #2a2a1a;
         }
 
+        .source-tag {
+            display: inline-block;
+            padding: 1px 5px;
+            border-radius: 3px;
+            font-size: 0.55rem;
+            margin-right: 6px;
+            font-weight: 600;
+        }
+
+        .source-tag.widget {
+            background: #28a745;
+            color: white;
+        }
+
+        .source-tag.browser {
+            background: #6c757d;
+            color: white;
+        }
+
+        .source-tag.debug {
+            background: #17a2b8;
+            color: white;
+        }
+
         .log-time {
             color: #888;
-            font-size: 0.6rem;
+            font-size: 0.55rem;
             margin-bottom: 2px;
         }
 
@@ -396,19 +493,19 @@
         .log-json {
             color: #9cdcfe;
             background: #1a1a1a;
-            padding: 8px;
+            padding: 6px;
             border-radius: 4px;
-            margin-top: 6px;
+            margin-top: 4px;
             overflow-x: auto;
             white-space: pre-wrap;
-            font-size: 0.68rem;
+            font-size: 0.62rem;
         }
 
         /* Right Column - Stacked Panels */
         .right-column {
             display: flex;
             flex-direction: column;
-            gap: 15px;
+            gap: 12px;
             overflow: hidden;
             max-height: calc(50vh - 25px);
         }
@@ -416,31 +513,31 @@
         /* Quick Actions Panel */
         .quick-actions {
             background: #1e1e1e;
-            border-radius: 12px;
-            padding: 15px;
+            border-radius: 10px;
+            padding: 12px;
             flex-shrink: 0;
         }
 
         .quick-actions h3 {
             color: #fff;
-            font-size: 0.85rem;
-            margin-bottom: 12px;
+            font-size: 0.8rem;
+            margin-bottom: 10px;
         }
 
         .action-grid {
             display: grid;
             grid-template-columns: 1fr 1fr;
-            gap: 8px;
+            gap: 6px;
         }
 
         .action-btn {
             background: #2d2d2d;
             border: 1px solid #3d3d3d;
             color: #fff;
-            padding: 12px;
-            border-radius: 8px;
+            padding: 10px;
+            border-radius: 6px;
             cursor: pointer;
-            font-size: 0.75rem;
+            font-size: 0.7rem;
             text-align: center;
             transition: all 0.2s;
         }
@@ -451,82 +548,24 @@
         }
 
         .action-btn .icon {
-            font-size: 1.2rem;
+            font-size: 1rem;
             display: block;
-            margin-bottom: 4px;
-        }
-
-        /* Session Info */
-        .session-panel {
-            background: #1e1e1e;
-            border-radius: 12px;
-            padding: 15px;
-        }
-
-        .session-panel h3 {
-            color: #fff;
-            font-size: 0.85rem;
-            margin-bottom: 12px;
-        }
-
-        .session-id {
-            background: #2d2d2d;
-            padding: 10px;
-            border-radius: 6px;
-            font-family: monospace;
-            font-size: 0.7rem;
-            color: #9cdcfe;
-            word-break: break-all;
-            margin-bottom: 10px;
-        }
-
-        .session-meta {
-            font-size: 0.7rem;
-            color: #888;
-        }
-
-        /* Custom Test Input */
-        .test-input-panel {
-            background: #1e1e1e;
-            border-radius: 12px;
-            padding: 15px;
-        }
-
-        .test-input-panel h3 {
-            color: #fff;
-            font-size: 0.85rem;
-            margin-bottom: 12px;
-        }
-
-        .test-input {
-            width: 100%;
-            background: #2d2d2d;
-            border: 1px solid #3d3d3d;
-            color: #fff;
-            padding: 10px;
-            border-radius: 6px;
-            font-size: 0.8rem;
-            margin-bottom: 10px;
-            resize: vertical;
-            min-height: 60px;
-            font-family: monospace;
-        }
-
-        .test-input:focus {
-            outline: none;
-            border-color: #667eea;
+            margin-bottom: 3px;
         }
 
         /* Scrollbar */
-        .panel-content::-webkit-scrollbar {
-            width: 6px;
+        .panel-content::-webkit-scrollbar,
+        .sidebar::-webkit-scrollbar {
+            width: 5px;
         }
 
-        .panel-content::-webkit-scrollbar-track {
+        .panel-content::-webkit-scrollbar-track,
+        .sidebar::-webkit-scrollbar-track {
             background: #1e1e1e;
         }
 
-        .panel-content::-webkit-scrollbar-thumb {
+        .panel-content::-webkit-scrollbar-thumb,
+        .sidebar::-webkit-scrollbar-thumb {
             background: #4d4d4d;
             border-radius: 3px;
         }
@@ -539,9 +578,9 @@
             transform: translateX(-50%) translateY(100px);
             background: #28a745;
             color: white;
-            padding: 12px 24px;
+            padding: 10px 20px;
             border-radius: 8px;
-            font-size: 0.85rem;
+            font-size: 0.8rem;
             box-shadow: 0 4px 20px rgba(0,0,0,0.3);
             transition: transform 0.3s ease;
             z-index: 10000;
@@ -552,12 +591,18 @@
         }
 
         /* Responsive */
+        @media (max-width: 1400px) {
+            .main-layout {
+                grid-template-columns: 240px 1fr 1fr 300px;
+            }
+        }
+
         @media (max-width: 1200px) {
             .main-layout {
-                grid-template-columns: 280px 1fr;
+                grid-template-columns: 220px 1fr 280px;
                 grid-template-rows: auto auto auto;
             }
-            .postmessage-column {
+            .widget-column {
                 grid-row: auto;
             }
             .sidebar {
@@ -568,6 +613,9 @@
         @media (max-width: 768px) {
             .main-layout {
                 grid-template-columns: 1fr;
+            }
+            .widget-column {
+                min-width: auto;
             }
         }
     </style>
@@ -603,12 +651,12 @@
                         <div class="state-value" id="networkCount">0</div>
                     </div>
                     <div class="state-item">
-                        <div class="state-label">Messages</div>
+                        <div class="state-label">Widget Msgs</div>
                         <div class="state-value" id="messageCount">0</div>
                     </div>
                 </div>
 
-                <div class="controls" style="margin-top: 15px;">
+                <div class="controls" style="margin-top: 12px;">
                     <button class="control-btn" onclick="debugTools.reloadWidget()">
                         <span>&#8635;</span> Reload Widget
                     </button>
@@ -619,59 +667,58 @@
                 </div>
             </div>
 
-            <!-- Environment Info -->
-            <div class="env-panel">
-                <h3><span>&#128421;</span> Environment</h3>
-                <div class="env-item">
-                    <span class="env-label">Page URL</span>
-                    <span class="env-value" id="envUrl"></span>
+            <!-- Filter Controls -->
+            <div class="config-panel">
+                <h3><span>&#128295;</span> Filters</h3>
+                <div class="filter-toggle">
+                    <input type="checkbox" id="filterDevtools" checked onchange="debugTools.toggleFilter('devtools')">
+                    <label for="filterDevtools">Hide React DevTools noise</label>
                 </div>
-                <div class="env-item">
-                    <span class="env-label">User Agent</span>
-                    <span class="env-value" id="envUserAgent"></span>
+                <div class="filter-toggle" style="margin-top: 6px;">
+                    <input type="checkbox" id="filterDebugPanel" checked onchange="debugTools.toggleFilter('debugPanel')">
+                    <label for="filterDebugPanel">Hide debug_panel test msgs</label>
                 </div>
-                <div class="env-item">
-                    <span class="env-label">Screen</span>
-                    <span class="env-value" id="envScreen"></span>
+                <div class="filter-toggle" style="margin-top: 6px;">
+                    <input type="checkbox" id="collapseRepeats" checked onchange="debugTools.toggleFilter('collapse')">
+                    <label for="collapseRepeats">Collapse repeated messages</label>
                 </div>
-                <div class="env-item">
-                    <span class="env-label">Timestamp</span>
-                    <span class="env-value" id="envTimestamp"></span>
-                </div>
-                <div class="env-item">
-                    <span class="env-label">Widget GUID</span>
-                    <span class="env-value" id="envGuid">8da474ae-...</span>
+                <div class="filter-stats" id="filterStats">Filtered: 0 | Shown: 0</div>
+            </div>
+
+            <!-- Widget Config Panel -->
+            <div class="config-panel">
+                <h3><span>&#9881;</span> Widget Config</h3>
+                <div id="widgetConfigContent">
+                    <div class="config-item">
+                        <span class="config-label">Status</span>
+                        <span class="config-value warning">Waiting...</span>
+                    </div>
                 </div>
             </div>
 
             <!-- Session Panel -->
-            <div class="session-panel">
-                <h3><span>&#128273;</span> Session Info</h3>
-                <div class="session-id" id="sessionId">No active session</div>
-                <div class="session-meta">
-                    <div>Started: <span id="sessionStart">-</span></div>
-                    <div>Duration: <span id="sessionDuration">-</span></div>
+            <div class="config-panel">
+                <h3><span>&#128273;</span> Session</h3>
+                <div class="config-item">
+                    <span class="config-label">ID</span>
+                    <span class="config-value" id="sessionId">-</span>
+                </div>
+                <div class="config-item">
+                    <span class="config-label">Started</span>
+                    <span class="config-value" id="sessionStart">-</span>
+                </div>
+                <div class="config-item">
+                    <span class="config-label">Duration</span>
+                    <span class="config-value" id="sessionDuration">0s</span>
+                </div>
+                <div class="config-item">
+                    <span class="config-label">Fingerprint</span>
+                    <span class="config-value" id="fingerprint">-</span>
                 </div>
             </div>
         </div>
 
-        <!-- PostMessages Panel - Full Height -->
-        <div class="postmessage-column">
-            <div class="debug-panel" style="height: 100%;">
-                <div class="panel-header">
-                    <span class="panel-title"><span>&#128233;</span> PostMessages</span>
-                    <div class="panel-actions">
-                        <span class="panel-count" id="postMessageCount">0</span>
-                        <button class="copy-btn" onclick="debugTools.copyPanelLogs('postMessage')">
-                            <span>&#128203;</span> Copy All
-                        </button>
-                    </div>
-                </div>
-                <div class="panel-content" id="postMessageLogs"></div>
-            </div>
-        </div>
-
-        <!-- Right Column - Top -->
+        <!-- Middle Column - Top (Console + Quick Actions) -->
         <div class="right-column">
             <!-- Console Log Panel -->
             <div class="debug-panel" style="flex: 1;">
@@ -680,7 +727,7 @@
                     <div class="panel-actions">
                         <span class="panel-count" id="consoleCount">0</span>
                         <button class="copy-btn" onclick="debugTools.copyPanelLogs('console')">
-                            <span>&#128203;</span> Copy All
+                            <span>&#128203;</span> Copy
                         </button>
                     </div>
                 </div>
@@ -691,36 +738,36 @@
             <div class="quick-actions">
                 <h3><span>&#9889;</span> Quick Actions</h3>
                 <div class="action-grid">
-                    <button class="action-btn" onclick="debugTools.triggerTestMessage()">
-                        <span class="icon">&#128172;</span>
-                        Test Message
-                    </button>
                     <button class="action-btn" onclick="debugTools.inspectWidget()">
                         <span class="icon">&#128269;</span>
-                        Inspect Widget
+                        Inspect
                     </button>
                     <button class="action-btn" onclick="debugTools.checkConnectivity()">
                         <span class="icon">&#128225;</span>
-                        Check Connection
+                        Ping
                     </button>
                     <button class="action-btn" onclick="debugTools.copyFullReport()">
                         <span class="icon">&#128203;</span>
-                        Copy Full Report
+                        Full Report
+                    </button>
+                    <button class="action-btn" onclick="debugTools.copyWidgetConfig()">
+                        <span class="icon">&#9881;</span>
+                        Copy Config
                     </button>
                 </div>
             </div>
         </div>
 
-        <!-- Right Column - Bottom -->
+        <!-- Middle Column - Bottom (Network + Widget Events) -->
         <div class="right-column">
             <!-- Network Panel -->
             <div class="debug-panel" style="flex: 1;">
                 <div class="panel-header">
-                    <span class="panel-title"><span>&#127760;</span> Network Activity</span>
+                    <span class="panel-title"><span>&#127760;</span> Network</span>
                     <div class="panel-actions">
                         <span class="panel-count" id="networkLogCount">0</span>
                         <button class="copy-btn" onclick="debugTools.copyPanelLogs('network')">
-                            <span>&#128203;</span> Copy All
+                            <span>&#128203;</span> Copy
                         </button>
                     </div>
                 </div>
@@ -734,12 +781,31 @@
                     <div class="panel-actions">
                         <span class="panel-count" id="eventCount">0</span>
                         <button class="copy-btn" onclick="debugTools.copyPanelLogs('events')">
-                            <span>&#128203;</span> Copy All
+                            <span>&#128203;</span> Copy
                         </button>
                     </div>
                 </div>
                 <div class="panel-content" id="eventLogs"></div>
             </div>
+        </div>
+
+        <!-- Right Column - PostMessages + Widget Space -->
+        <div class="widget-column">
+            <!-- PostMessages Panel -->
+            <div class="debug-panel" style="height: calc(50vh - 25px); margin-bottom: 12px;">
+                <div class="panel-header">
+                    <span class="panel-title"><span>&#128233;</span> PostMessages</span>
+                    <div class="panel-actions">
+                        <span class="panel-count" id="postMessageCount">0</span>
+                        <span class="panel-count filtered" id="postMessageFiltered" style="display:none;">0 hidden</span>
+                        <button class="copy-btn" onclick="debugTools.copyPanelLogs('postMessage')">
+                            <span>&#128203;</span> Copy
+                        </button>
+                    </div>
+                </div>
+                <div class="panel-content" id="postMessageLogs"></div>
+            </div>
+            <!-- Widget will render in remaining space below -->
         </div>
     </div>
 
@@ -750,12 +816,6 @@
     <div id="divicw" data-bind="BDA10ED6-14B4-41E8-A74C-62E0E5895C78" data-org="" data-guid="8da474ae-5313-4b52-a2c6-fd6cbf02e5c8"></div>
 
     <script>
-        // Initialize environment info
-        document.getElementById('envUrl').textContent = window.location.hostname;
-        document.getElementById('envUserAgent').textContent = navigator.userAgent.split(' ').pop();
-        document.getElementById('envScreen').textContent = `${window.innerWidth}x${window.innerHeight}`;
-        document.getElementById('envTimestamp').textContent = new Date().toLocaleTimeString();
-
         // Session tracking
         const sessionStartTime = Date.now();
         const sessionUUID = 'dbg-' + Math.random().toString(36).substr(2, 9);
@@ -777,6 +837,21 @@
             setTimeout(() => toast.classList.remove('show'), 2000);
         }
 
+        // Noise patterns to filter
+        const NOISE_PATTERNS = {
+            devtools: [
+                'react-devtools',
+                'redux-devtools',
+                '__REACT_DEVTOOLS',
+                'chrome-extension://',
+                'moz-extension://'
+            ],
+            debugPanel: [
+                'debug_panel',
+                'debug_test'
+            ]
+        };
+
         // Debug Tools Object
         const debugTools = {
             logs: {
@@ -785,7 +860,269 @@
                 network: [],
                 events: []
             },
+            rawLogs: {
+                postMessage: []
+            },
             entryIndex: 0,
+            widgetConfig: null,
+            filters: {
+                devtools: true,
+                debugPanel: true,
+                collapse: true
+            },
+            lastPostMessage: null,
+            repeatCount: 0,
+            filteredCount: 0,
+            widgetMessageCount: 0,
+
+            isNoise: function(data, origin) {
+                const dataStr = typeof data === 'string' ? data : JSON.stringify(data || '');
+
+                // Check devtools noise
+                if (this.filters.devtools) {
+                    for (const pattern of NOISE_PATTERNS.devtools) {
+                        if (dataStr.includes(pattern) || (origin && origin.includes(pattern))) {
+                            return 'devtools';
+                        }
+                    }
+                }
+
+                // Check debug panel noise
+                if (this.filters.debugPanel) {
+                    for (const pattern of NOISE_PATTERNS.debugPanel) {
+                        if (dataStr.includes(pattern)) {
+                            return 'debugPanel';
+                        }
+                    }
+                }
+
+                return false;
+            },
+
+            categorizeMessage: function(data, origin) {
+                // Widget messages from IMI
+                if (origin && origin.includes('imi.chat')) {
+                    return 'widget';
+                }
+                if (origin && origin.includes('media.imi')) {
+                    return 'widget';
+                }
+
+                // Browser extension noise
+                const dataStr = typeof data === 'string' ? data : JSON.stringify(data || '');
+                for (const pattern of NOISE_PATTERNS.devtools) {
+                    if (dataStr.includes(pattern)) {
+                        return 'browser';
+                    }
+                }
+
+                // Debug panel messages
+                if (dataStr.includes('debug_panel') || dataStr.includes('debug_test')) {
+                    return 'debug';
+                }
+
+                return 'other';
+            },
+
+            isDuplicate: function(type, message, data) {
+                if (!this.filters.collapse) return false;
+                if (type !== 'postMessage') return false;
+
+                const current = JSON.stringify({ message, data });
+                if (current === this.lastPostMessage) {
+                    this.repeatCount++;
+                    return true;
+                }
+
+                this.lastPostMessage = current;
+                this.repeatCount = 0;
+                return false;
+            },
+
+            toggleFilter: function(filterName) {
+                this.filters[filterName] = document.getElementById(
+                    filterName === 'devtools' ? 'filterDevtools' :
+                    filterName === 'debugPanel' ? 'filterDebugPanel' : 'collapseRepeats'
+                ).checked;
+                this.rerenderPostMessages();
+            },
+
+            rerenderPostMessages: function() {
+                const container = document.getElementById('postMessageLogs');
+                container.innerHTML = '';
+                this.logs.postMessage = [];
+                this.filteredCount = 0;
+                this.widgetMessageCount = 0;
+                this.lastPostMessage = null;
+                this.repeatCount = 0;
+
+                for (const raw of this.rawLogs.postMessage) {
+                    this.processPostMessage(raw.origin, raw.data, raw.timestamp, false);
+                }
+
+                this.updateFilterStats();
+            },
+
+            processPostMessage: function(origin, data, timestamp, isNew = true) {
+                if (isNew) {
+                    this.rawLogs.postMessage.push({ origin, data, timestamp });
+                }
+
+                const noiseType = this.isNoise(data, origin);
+                if (noiseType) {
+                    this.filteredCount++;
+                    this.updateFilterStats();
+                    return;
+                }
+
+                const category = this.categorizeMessage(data, origin);
+                if (category === 'widget') {
+                    this.widgetMessageCount++;
+                    document.getElementById('messageCount').textContent = this.widgetMessageCount;
+                }
+
+                // Check for widget config in loadstyles action
+                if (data && data.action === 'loadstyles' && data.message) {
+                    try {
+                        const config = JSON.parse(data.message);
+                        this.parseWidgetConfig(config);
+                    } catch (e) {}
+                }
+
+                // Check for fingerprint
+                if (data && data.action === 'setlocal' && data.key === 'fingerprint') {
+                    document.getElementById('fingerprint').textContent = data.value.substring(0, 12) + '...';
+                }
+
+                const message = `Origin: ${origin}`;
+
+                // Check for duplicate
+                if (this.isDuplicate('postMessage', message, data)) {
+                    // Update last entry with count
+                    const container = document.getElementById('postMessageLogs');
+                    const lastEntry = container.lastElementChild;
+                    if (lastEntry) {
+                        let countBadge = lastEntry.querySelector('.collapse-count');
+                        if (!countBadge) {
+                            countBadge = document.createElement('span');
+                            countBadge.className = 'collapse-count';
+                            lastEntry.querySelector('.log-message').appendChild(countBadge);
+                        }
+                        countBadge.textContent = `x${this.repeatCount + 1}`;
+                    }
+                    return;
+                }
+
+                const entry = {
+                    timestamp: timestamp || new Date().toISOString(),
+                    message,
+                    data,
+                    logType: category === 'widget' ? 'widget-message' :
+                             category === 'browser' ? 'browser-noise' : 'postmessage',
+                    category,
+                    id: this.entryIndex++
+                };
+
+                this.logs.postMessage.push(entry);
+                this.renderPostMessageLog(entry);
+                this.updateCounts();
+            },
+
+            highlightBooleans: function(jsonStr) {
+                // Replace true/false with colored spans
+                return jsonStr
+                    .replace(/"([^"]+)":\s*true/g, '"$1": <span class="bool-true">true</span>')
+                    .replace(/"([^"]+)":\s*false/g, '"$1": <span class="bool-false">false</span>')
+                    .replace(/:\s*true([,\n\r\s}])/g, ': <span class="bool-true">true</span>$1')
+                    .replace(/:\s*false([,\n\r\s}])/g, ': <span class="bool-false">false</span>$1');
+            },
+
+            renderPostMessageLog: function(entry) {
+                const container = document.getElementById('postMessageLogs');
+                if (!container) return;
+
+                const div = document.createElement('div');
+                div.className = `log-entry ${entry.logType}`;
+                div.setAttribute('data-entry-id', entry.id);
+
+                const sourceTag = entry.category === 'widget' ? '<span class="source-tag widget">WIDGET</span>' :
+                                  entry.category === 'browser' ? '<span class="source-tag browser">BROWSER</span>' :
+                                  entry.category === 'debug' ? '<span class="source-tag debug">DEBUG</span>' : '';
+
+                let html = `<button class="entry-copy-btn" onclick="debugTools.copyEntry(${entry.id}, 'postMessage', this)">Copy</button>`;
+                html += `<div class="log-time">${entry.timestamp}</div>`;
+                html += `<div class="log-message">${sourceTag}${this.escapeHtml(entry.message)}</div>`;
+
+                if (entry.data) {
+                    try {
+                        // For widget config, show abbreviated version
+                        let displayData = entry.data;
+                        if (entry.data.action === 'loadstyles' && entry.data.message) {
+                            displayData = { action: 'loadstyles', message: '[Widget Config - see sidebar]' };
+                        }
+                        const jsonStr = typeof displayData === 'string' ? displayData : JSON.stringify(displayData, null, 2);
+                        // Highlight boolean values with colors
+                        const highlightedJson = this.highlightBooleans(this.escapeHtml(jsonStr));
+                        html += `<div class="log-json">${highlightedJson}</div>`;
+                    } catch (e) {
+                        html += `<div class="log-json">[Unable to stringify]</div>`;
+                    }
+                }
+
+                div.innerHTML = html;
+                container.appendChild(div);
+                container.scrollTop = container.scrollHeight;
+            },
+
+            parseWidgetConfig: function(config) {
+                this.widgetConfig = config;
+                const container = document.getElementById('widgetConfigContent');
+
+                const items = [
+                    { label: 'App ID', value: config.appid },
+                    { label: 'Name', value: config.name },
+                    { label: 'Website ID', value: config.website_id },
+                    { label: 'Agent Avail', value: config.agent_avail === 1 ? 'Yes' : 'No', class: config.agent_avail === 1 ? 'success' : 'warning' },
+                    { label: 'Proactive', value: config.enable_proactive ? 'Yes' : 'No' },
+                    { label: 'Attachments', value: config.isattachmentenabled ? 'Yes' : 'No' },
+                    { label: 'Emoji', value: config.isemojienable ? 'Yes' : 'No' },
+                    { label: 'Language', value: config.widget_lang },
+                    { label: 'Color', value: config.widgetcolor }
+                ];
+
+                container.innerHTML = items.map(item => `
+                    <div class="config-item">
+                        <span class="config-label">${item.label}</span>
+                        <span class="config-value ${item.class || ''}">${item.value || '-'}</span>
+                    </div>
+                `).join('');
+
+                this.addLog('events', 'Widget config received', { appid: config.appid, name: config.name }, 'success');
+            },
+
+            copyWidgetConfig: function() {
+                if (this.widgetConfig) {
+                    navigator.clipboard.writeText(JSON.stringify(this.widgetConfig, null, 2)).then(() => {
+                        showToast('Widget config copied!');
+                    });
+                } else {
+                    showToast('No widget config received yet');
+                }
+            },
+
+            updateFilterStats: function() {
+                const shown = this.logs.postMessage.length;
+                const filtered = this.filteredCount;
+                document.getElementById('filterStats').textContent = `Filtered: ${filtered} | Shown: ${shown}`;
+
+                const filteredBadge = document.getElementById('postMessageFiltered');
+                if (filtered > 0) {
+                    filteredBadge.style.display = 'inline';
+                    filteredBadge.textContent = `${filtered} hidden`;
+                } else {
+                    filteredBadge.style.display = 'none';
+                }
+            },
 
             addLog: function(type, message, data = null, logType = 'info') {
                 const timestamp = new Date().toISOString();
@@ -797,7 +1134,6 @@
 
             renderLog: function(type, entry) {
                 const containerId = type === 'console' ? 'consoleLogs' :
-                                   type === 'postMessage' ? 'postMessageLogs' :
                                    type === 'network' ? 'networkLogs' : 'eventLogs';
                 const container = document.getElementById(containerId);
                 if (!container) return;
@@ -805,12 +1141,6 @@
                 const div = document.createElement('div');
                 div.className = `log-entry ${entry.logType}`;
                 div.setAttribute('data-entry-id', entry.id);
-
-                let entryData = {
-                    timestamp: entry.timestamp,
-                    message: entry.message,
-                    data: entry.data
-                };
 
                 let html = `<button class="entry-copy-btn" onclick="debugTools.copyEntry(${entry.id}, '${type}', this)">Copy</button>`;
                 html += `<div class="log-time">${entry.timestamp}</div>`;
@@ -821,7 +1151,7 @@
                         const jsonStr = typeof entry.data === 'string' ? entry.data : JSON.stringify(entry.data, null, 2);
                         html += `<div class="log-json">${this.escapeHtml(jsonStr)}</div>`;
                     } catch (e) {
-                        html += `<div class="log-json">[Unable to stringify data]</div>`;
+                        html += `<div class="log-json">[Unable to stringify]</div>`;
                     }
                 }
 
@@ -842,7 +1172,6 @@
                 document.getElementById('networkLogCount').textContent = this.logs.network.length;
                 document.getElementById('networkCount').textContent = this.logs.network.length;
                 document.getElementById('eventCount').textContent = this.logs.events.length;
-                document.getElementById('messageCount').textContent = this.logs.postMessage.length;
             },
 
             copyEntry: function(entryId, type, btn) {
@@ -850,21 +1179,23 @@
                 if (entry) {
                     const text = JSON.stringify(entry, null, 2);
                     navigator.clipboard.writeText(text).then(() => {
-                        btn.textContent = 'Copied!';
+                        btn.textContent = 'OK!';
                         btn.classList.add('copied');
                         setTimeout(() => {
                             btn.textContent = 'Copy';
                             btn.classList.remove('copied');
-                        }, 1500);
+                        }, 1000);
                     });
                 }
             },
 
             copyPanelLogs: function(type) {
-                const logs = this.logs[type];
+                const logs = type === 'postMessage' ?
+                    this.logs.postMessage.filter(l => l.category === 'widget' || !this.filters.devtools) :
+                    this.logs[type];
                 const text = JSON.stringify(logs, null, 2);
                 navigator.clipboard.writeText(text).then(() => {
-                    showToast(`Copied ${logs.length} ${type} entries!`);
+                    showToast(`Copied ${logs.length} entries!`);
                 });
             },
 
@@ -879,19 +1210,37 @@
                         screen: `${window.innerWidth}x${window.innerHeight}`,
                         widgetGuid: '8da474ae-5313-4b52-a2c6-fd6cbf02e5c8'
                     },
-                    logs: this.logs
+                    widgetConfig: this.widgetConfig,
+                    logs: {
+                        console: this.logs.console,
+                        postMessage: this.logs.postMessage.filter(l => l.category === 'widget'),
+                        network: this.logs.network,
+                        events: this.logs.events
+                    },
+                    stats: {
+                        totalPostMessages: this.rawLogs.postMessage.length,
+                        filteredOut: this.filteredCount,
+                        widgetMessages: this.widgetMessageCount
+                    }
                 };
                 navigator.clipboard.writeText(JSON.stringify(report, null, 2)).then(() => {
-                    showToast('Full debug report copied!');
+                    showToast('Full report copied (noise filtered)!');
                 });
             },
 
             clearAllLogs: function() {
                 this.logs = { console: [], postMessage: [], network: [], events: [] };
+                this.rawLogs = { postMessage: [] };
+                this.filteredCount = 0;
+                this.widgetMessageCount = 0;
+                this.lastPostMessage = null;
+                this.repeatCount = 0;
                 ['consoleLogs', 'postMessageLogs', 'networkLogs', 'eventLogs'].forEach(id => {
                     document.getElementById(id).innerHTML = '';
                 });
                 this.updateCounts();
+                this.updateFilterStats();
+                document.getElementById('messageCount').textContent = '0';
                 this.addLog('events', 'Logs cleared', null, 'info');
             },
 
@@ -901,16 +1250,22 @@
                     sessionId: sessionUUID,
                     userAgent: navigator.userAgent,
                     url: window.location.href,
-                    logs: this.logs
+                    widgetConfig: this.widgetConfig,
+                    logs: {
+                        console: this.logs.console,
+                        postMessage: this.logs.postMessage.filter(l => l.category === 'widget'),
+                        network: this.logs.network,
+                        events: this.logs.events
+                    }
                 };
                 const blob = new Blob([JSON.stringify(exportData, null, 2)], { type: 'application/json' });
                 const url = URL.createObjectURL(blob);
                 const a = document.createElement('a');
                 a.href = url;
-                a.download = `webex-debug-${sessionUUID}-${Date.now()}.json`;
+                a.download = `webex-debug-${sessionUUID}.json`;
                 a.click();
                 URL.revokeObjectURL(url);
-                this.addLog('events', 'Logs exported to file', null, 'success');
+                this.addLog('events', 'Logs exported', null, 'success');
             },
 
             reloadWidget: function() {
@@ -921,12 +1276,10 @@
                 const widgetElements = document.querySelectorAll('[id*="icw"], [class*="icw"], iframe[src*="imi"]');
                 widgetElements.forEach(el => el.remove());
 
-                setTimeout(() => initWidget(), 500);
-            },
+                this.widgetConfig = null;
+                document.getElementById('widgetConfigContent').innerHTML = '<div class="config-item"><span class="config-label">Status</span><span class="config-value warning">Reloading...</span></div>';
 
-            triggerTestMessage: function() {
-                this.addLog('events', 'Triggering test postMessage...', null, 'info');
-                window.postMessage({ type: 'debug_test', timestamp: Date.now(), source: 'debug_panel' }, '*');
+                setTimeout(() => initWidget(), 500);
             },
 
             inspectWidget: function() {
@@ -935,17 +1288,20 @@
                     iframes: document.querySelectorAll('iframe').length,
                     icwElements: document.querySelectorAll('[id*="icw"], [class*="icw"]').length,
                     IMIchat: typeof window.IMIchat,
-                    icw: typeof window.icw
+                    icw: typeof window.icw,
+                    configReceived: !!this.widgetConfig
                 };
                 this.addLog('events', 'Widget inspection', widgetInfo, 'info');
-                showToast('Widget inspection logged');
+                showToast('Inspection logged');
             },
 
             checkConnectivity: function() {
-                this.addLog('network', 'Testing connectivity to IMI servers...', null, 'info');
+                this.addLog('network', 'Pinging IMI servers...', null, 'info');
+                const start = Date.now();
                 fetch('https://media.imi.chat/widget/js/imichatinit.js', { method: 'HEAD', mode: 'no-cors' })
                     .then(() => {
-                        this.addLog('network', 'IMI server reachable', { status: 'ok' }, 'success');
+                        const latency = Date.now() - start;
+                        this.addLog('network', `IMI server OK (${latency}ms)`, { latency }, 'success');
                     })
                     .catch(err => {
                         this.addLog('network', 'IMI server unreachable', { error: err.message }, 'error');
@@ -1023,7 +1379,7 @@
             safeLogToPanel('console', args, 'info');
         };
 
-        // Intercept postMessage
+        // Intercept postMessage with filtering
         window.addEventListener('message', function(event) {
             let data = event.data;
             let displayData = data;
@@ -1034,7 +1390,7 @@
                 }
             } catch (e) {}
 
-            debugTools.addLog('postMessage', `Origin: ${event.origin}`, displayData, 'postmessage');
+            debugTools.processPostMessage(event.origin, displayData, new Date().toISOString(), true);
         }, false);
 
         // Intercept XHR requests
@@ -1059,12 +1415,12 @@
                     try {
                         responseData = JSON.parse(xhr.responseText);
                     } catch (e) {
-                        responseData = xhr.responseText?.substring(0, 500);
+                        responseData = xhr.responseText?.substring(0, 300);
                     }
 
                     debugTools.addLog('network',
                         `${xhr._debugMethod} ${xhr._debugUrl} - ${xhr.status} (${duration}ms)`,
-                        { status: xhr.status, response: responseData, requestBody: body },
+                        { status: xhr.status, response: responseData },
                         xhr.status >= 400 ? 'error' : 'network'
                     );
                 });
@@ -1098,7 +1454,7 @@
                     try {
                         responseData = JSON.parse(text);
                     } catch (e) {
-                        responseData = text?.substring(0, 500);
+                        responseData = text?.substring(0, 300);
                     }
 
                     debugTools.addLog('network',
@@ -1125,7 +1481,7 @@
                 mutation.addedNodes.forEach(function(node) {
                     if (node.nodeType === 1) {
                         if (node.tagName === 'IFRAME' || node.id?.includes('icw') || node.className?.includes('icw')) {
-                            debugTools.addLog('events', `Widget element added: ${node.tagName} ${node.id || node.className}`, null, 'success');
+                            debugTools.addLog('events', `Widget element: ${node.tagName} ${node.id || node.className}`, null, 'success');
                         }
                     }
                 });
@@ -1136,7 +1492,7 @@
 
         // Widget initialization
         function initWidget() {
-            debugTools.addLog('events', 'Starting widget initialization...', null, 'info');
+            debugTools.addLog('events', 'Starting widget init...', null, 'info');
             debugTools.updateStatus('Loading...', '#ffc107');
 
             try {
@@ -1144,63 +1500,42 @@
                 var t = document.createElement("script");
                 t.src = "https://media.imi.chat/widget/js/imichatinit.js?t=" + new Date().toISOString();
 
-                debugTools.addLog('network', `Loading script: ${t.src}`, null, 'network');
+                debugTools.addLog('network', `Loading: ${t.src.substring(0, 60)}...`, null, 'network');
 
                 e.insertAdjacentElement("afterend", t);
 
                 t.addEventListener("load", function() {
-                    debugTools.addLog('events', 'Livechat script loaded successfully!', null, 'success');
+                    debugTools.addLog('events', 'Script loaded!', null, 'success');
                     debugTools.updateStatus('Widget Ready', '#28a745');
                     debugTools.updateWidgetState('Ready', true);
                     debugTools.updateScriptState('Loaded', true);
-
-                    setTimeout(() => {
-                        if (window.IMIchat || window.icw) {
-                            debugTools.addLog('events', 'Widget API detected', {
-                                IMIchat: !!window.IMIchat,
-                                icw: !!window.icw
-                            }, 'success');
-                        }
-                    }, 2000);
                 });
 
                 t.addEventListener("error", function(err) {
-                    debugTools.addLog('events', 'Error loading Livechat script', err, 'error');
-                    debugTools.updateStatus('Widget Failed', '#dc3545');
+                    debugTools.addLog('events', 'Script load failed', null, 'error');
+                    debugTools.updateStatus('Failed', '#dc3545');
                     debugTools.updateWidgetState('Failed', false);
                     debugTools.updateScriptState('Error', false);
-                    showFallback(e);
                 });
             } catch (err) {
-                debugTools.addLog('console', `Initialization error: ${err.message}`, err.stack, 'error');
+                debugTools.addLog('console', `Init error: ${err.message}`, null, 'error');
             }
-        }
-
-        function showFallback(e) {
-            e.insertAdjacentHTML("afterend", '<iframe id="tls_al_frm" frameborder="0" style="overflow:hidden;height:208px;width:394px;position:fixed;display:block;right:48px;bottom:12px;z-index:99999;"></iframe>');
-            var t = document.getElementById("tls_al_frm"),
-                n = t.contentWindow,
-                d = n.document;
-            d.open();
-            d.write("<!doctype html><html><head><meta charset='utf-8'><title>Error</title><style>body{font-family:'Helvetica Neue',Helvetica,Arial,sans-serif;color:#99a0b0;font-size:14px}.popover__content{background-color:#fbfbfe;padding:1.5rem;border-radius:5px;width:300px;box-shadow:0 2px 5px 0 rgba(0,0,0,0.26);position:relative}.popover__message{font-weight:600;color:#56627c;font-size:16px}.pull-left{float:left}.clearfix{clear:both}.hdr-txt{width:218px;margin-top:3px}.close-btn{position:absolute;right:15px;top:15px}.close-btn a{text-decoration:none;font-weight:400;color:#56627c;font-size:16px}</style></head><body><div class='popover__content'><div class='close-btn'><a href='#' onclick='closeTLSAlert()'>X</a></div><div class='popover__message'><div class='pull-left hdr-txt'>This browser version is not supported on LiveChat.</div></div><div class='clearfix'></div><p>Please update your browser to the latest version.</p></div><script>function closeTLSAlert(){window.parent.postMessage({key:'close_tls_alert',value:'close_tls_alert',action:'close_tls_alert'},'*');}<\/script></body></html>");
-            d.close();
         }
 
         // Global error handler
         window.addEventListener('error', function(event) {
-            debugTools.addLog('console', `Global Error: ${event.message}`, {
-                filename: event.filename,
-                lineno: event.lineno,
-                colno: event.colno
+            debugTools.addLog('console', `Error: ${event.message}`, {
+                file: event.filename?.split('/').pop(),
+                line: event.lineno
             }, 'error');
         });
 
         window.addEventListener('unhandledrejection', function(event) {
-            debugTools.addLog('console', `Unhandled Promise Rejection: ${event.reason}`, null, 'error');
+            debugTools.addLog('console', `Promise rejected: ${event.reason}`, null, 'error');
         });
 
         // Initialize
-        debugTools.addLog('events', 'Debug dashboard initialized', { sessionId: sessionUUID }, 'success');
+        debugTools.addLog('events', 'Dashboard ready', { session: sessionUUID }, 'success');
         initWidget();
     </script>
 </body>
