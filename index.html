@@ -1979,6 +1979,7 @@
 
             <div class="help-nav-section">Developer Reference</div>
             <div class="help-nav-item" data-section="postmessage-api">PostMessage API</div>
+            <div class="help-nav-item" data-section="websocket-mqtt">WebSocket & MQTT</div>
             <div class="help-nav-item" data-section="common-issues">Common Issues</div>
             <div class="help-nav-item" data-section="resources">External Resources</div>
         </nav>
@@ -2418,6 +2419,62 @@ document.getElementById('openChat').onclick = function() {
                 <p><strong>Debug:</strong> Check Webex Connect flow debugger and webhook logs.</p>
             </div>
 
+            <!-- WebSocket & MQTT Section -->
+            <div class="help-section" id="section-websocket-mqtt">
+                <h2>WebSocket & MQTT Monitoring</h2>
+                <p>The WebSocket and MQTT panels provide real-time monitoring of connection activity. However, there are important limitations to understand.</p>
+
+                <div class="help-warning">
+                    <h4>Cross-Origin Iframe Limitation</h4>
+                    <p>The Webex Connect/IMI chat widget runs inside a <strong>cross-origin iframe</strong> from <code>media.imi.chat</code>. Due to browser security restrictions, WidgetScope <strong>cannot intercept WebSocket or MQTT traffic</strong> that occurs inside this iframe.</p>
+                    <p>This means:</p>
+                    <ul>
+                        <li>Actual chat message content is not visible in the WebSocket/MQTT panels</li>
+                        <li>Connection open/close events inside the iframe cannot be captured</li>
+                        <li>The panels will show "widget-iframe (cross-origin)" as the connection source</li>
+                    </ul>
+                </div>
+
+                <h3>What CAN Be Monitored</h3>
+                <p>WidgetScope detects widget activity through indirect signals:</p>
+                <ul>
+                    <li><strong>Widget initialization</strong> - Detected via the <code>loadstyles</code> PostMessage</li>
+                    <li><strong>Storage operations</strong> - When the widget stores/retrieves data via PostMessage</li>
+                    <li><strong>Same-origin WebSockets</strong> - Any WebSocket connections made by your own page (not the widget iframe)</li>
+                </ul>
+
+                <h3>To See Actual WebSocket Traffic</h3>
+                <p>Use your browser's built-in Developer Tools:</p>
+                <ol>
+                    <li>Open DevTools (F12 or Cmd+Option+I)</li>
+                    <li>Go to the <strong>Network</strong> tab</li>
+                    <li>Click the <strong>WS</strong> filter button</li>
+                    <li>Start a chat conversation</li>
+                    <li>Click on any WebSocket connection to see messages</li>
+                </ol>
+
+                <div class="help-tip">
+                    <p><strong>Tip:</strong> In Safari, enable the Develop menu (Preferences → Advanced → Show Develop menu) to access DevTools.</p>
+                </div>
+
+                <h3>Why This Limitation Exists</h3>
+                <p>Browser security prevents JavaScript on one domain from accessing resources (including WebSocket connections) created by an iframe from a different domain. This is the <strong>Same-Origin Policy</strong> - a fundamental web security feature.</p>
+                <p>The IMI widget intentionally runs in a cross-origin iframe to:</p>
+                <ul>
+                    <li>Protect chat message privacy</li>
+                    <li>Isolate widget code from the host page</li>
+                    <li>Prevent tampering with chat sessions</li>
+                </ul>
+
+                <h3>Requesting Enhanced Events</h3>
+                <p>If you need client-side access to chat events (message sent, message received, etc.), you can request this feature from Webex:</p>
+                <ul>
+                    <li>Email: <a href="mailto:chatproduct@imimobile.com" class="help-link">chatproduct@imimobile.com</a></li>
+                    <li>Request: Client-side callbacks like <code>onMessageReceived</code> or <code>onMessageSent</code></li>
+                </ul>
+                <p>Currently, the widget only exposes the <code>imichat-widget:ready</code> event to the parent page.</p>
+            </div>
+
             <!-- Resources Section -->
             <div class="help-section" id="section-resources">
                 <h2>External Resources</h2>
@@ -2749,6 +2806,9 @@ document.getElementById('openChat').onclick = function() {
                         <span class="stat-item">&#8593;<strong id="wsMsgsSent">0</strong></span>
                         <span class="stat-item">&#8595;<strong id="wsMsgsReceived">0</strong></span>
                         <span class="stat-item zombie-stat">&#9760;<strong id="wsZombieCount">0</strong></span>
+                    </div>
+                    <div class="iframe-notice" id="wsIframeNotice" style="background: rgba(245,158,11,0.1); border-left: 3px solid #f59e0b; padding: 8px 10px; margin: 8px 0; font-size: 0.7rem; color: #f59e0b; display: none;">
+                        <strong>Note:</strong> Widget runs in cross-origin iframe. Actual chat traffic not visible here. <a href="#" onclick="showHelpSection('websocket-mqtt'); return false;" style="color: #60a5fa; text-decoration: underline;">Learn more</a>
                     </div>
                     <div class="expandable-log" id="wsLogContainer"></div>
                 </div>
@@ -3831,6 +3891,11 @@ document.getElementById('openChat').onclick = function() {
             } catch (e) {}
 
             debugTools.processPostMessage(event.origin, displayData, new Date().toISOString(), true);
+
+            // Also check postMessage for WebSocket/MQTT related content from widget
+            if (typeof safariDebug !== 'undefined') {
+                safariDebug.parseWidgetPostMessage(event.origin, data, displayData);
+            }
         }, false);
 
         // Intercept XHR requests
@@ -4106,6 +4171,13 @@ document.getElementById('openChat').onclick = function() {
                 // "12/11/2025, 5:19:07 PM – "First connected""
                 // "12/11/2025, 5:19:07 PM – "Now Webcoscket is :" – "Connected""
 
+                // Debug: log all messages to see what we're getting
+                if (message && (message.toLowerCase().includes('websocket') ||
+                    message.toLowerCase().includes('connected') ||
+                    message.toLowerCase().includes('webcoscket'))) {
+                    console.log('[WidgetScope] Detected potential WS log:', message);
+                }
+
                 const lowerMsg = message.toLowerCase();
 
                 // WebSocket connection status
@@ -4178,6 +4250,114 @@ document.getElementById('openChat').onclick = function() {
                 }
             },
 
+            // Parse postMessage from widget for WebSocket/chat activity
+            parseWidgetPostMessage: function(origin, rawData, parsedData) {
+                // Only process messages from IMI/widget origins
+                if (!origin || (!origin.includes('imi') && !origin.includes('webex'))) {
+                    return;
+                }
+
+                const data = parsedData || rawData;
+                if (!data) return;
+
+                // DEBUG: Log ALL postMessages from widget origins
+                console.log('[WidgetScope] PostMessage from widget:', origin, typeof data === 'object' ? JSON.stringify(data).substring(0, 200) : data);
+
+                // Convert to string for searching
+                const dataStr = typeof data === 'string' ? data : JSON.stringify(data);
+                const lowerStr = dataStr.toLowerCase();
+
+                // Check for chat message activity
+                // Widget postMessage often contains action types like "message", "chat", etc.
+                if (typeof data === 'object') {
+                    // Look for common widget message patterns
+                    const action = data.action || data.type || data.event || '';
+                    const actionLower = action.toLowerCase();
+
+                    // Message received from agent/bot
+                    if (actionLower === 'message' || actionLower === 'chatmessage' ||
+                        actionLower === 'agentmessage' || actionLower === 'botmessage' ||
+                        lowerStr.includes('"message"') && lowerStr.includes('"text"')) {
+                        this.wsTotalMessages.received++;
+                        this.logWidgetWsEvent('recv', {
+                            preview: data.text || data.message || dataStr.substring(0, 80),
+                            action: action,
+                            source: 'postMessage'
+                        });
+                        this.updateWsUI();
+                    }
+
+                    // User sent message
+                    if (actionLower === 'sendmessage' || actionLower === 'usermessage' ||
+                        actionLower === 'send') {
+                        this.wsTotalMessages.sent++;
+                        this.logWidgetWsEvent('sent', {
+                            preview: data.text || data.message || dataStr.substring(0, 80),
+                            action: action,
+                            source: 'postMessage'
+                        });
+                        this.updateWsUI();
+                    }
+
+                    // Connection status
+                    if (actionLower === 'connected' || actionLower === 'ready' ||
+                        data.status === 'connected' || data.connected === true) {
+                        if (this.widgetWsId === 0) {
+                            this.widgetWsId = 1;
+                            this.wsTotalOpened = 1;
+                        }
+                        this.widgetWsState = 'connected';
+                        this.logWidgetWsEvent('open', { note: 'Widget connected', source: 'postMessage' });
+                        this.updateWsUI();
+                    }
+
+                    if (actionLower === 'disconnected' || actionLower === 'close' ||
+                        data.status === 'disconnected' || data.connected === false) {
+                        this.widgetWsState = 'disconnected';
+                        this.logWidgetWsEvent('close', { note: 'Widget disconnected', source: 'postMessage' });
+                        this.updateWsUI();
+                    }
+
+                    // loadstyles is a key widget init message - indicates widget is ready
+                    if (actionLower === 'loadstyles' || action === 'loadstyles') {
+                        if (this.widgetWsId === 0) {
+                            this.widgetWsId = 1;
+                            this.wsTotalOpened = 1;
+                        }
+                        this.widgetWsState = 'connected';
+                        this.logWidgetWsEvent('open', { note: 'Widget initialized (loadstyles)', source: 'postMessage' });
+                        this.updateWsUI();
+                    }
+
+                    // setlocal/getlocal - widget is storing/retrieving data (activity indicator)
+                    if (actionLower === 'setlocal' || actionLower === 'getlocal') {
+                        const key = data.key || '';
+                        // Log interesting storage events as activity
+                        if (key.includes('message') || key.includes('chat') || key.includes('conversation')) {
+                            this.wsTotalMessages.received++;
+                            this.logWidgetWsEvent('recv', {
+                                preview: `Storage: ${key}`,
+                                action: action,
+                                source: 'postMessage'
+                            });
+                            this.updateWsUI();
+                        }
+                    }
+
+                    // scrollbottom - indicates new message appeared in chat
+                    if (actionLower === 'scrollbottom' || actionLower === 'scroll') {
+                        // This often fires when messages are added
+                        this.lastActivityTime = Date.now();
+                    }
+                }
+
+                // Also check raw string for patterns
+                if (lowerStr.includes('websocket') || lowerStr.includes('connected') ||
+                    lowerStr.includes('disconnected') || lowerStr.includes('mqtt')) {
+                    console.log('[WidgetScope] PostMessage with connection info:', origin, data);
+                }
+            },
+
             logWidgetWsEvent: function(type, data) {
                 // Create a synthetic WebSocket event for the widget's iframe connection
                 const wsId = this.widgetWsId || 1;
@@ -4193,6 +4373,10 @@ document.getElementById('openChat').onclick = function() {
                         markedZombie: false,
                         isWidgetIframe: true
                     });
+
+                    // Show the cross-origin notice when widget iframe is detected
+                    const notice = document.getElementById('wsIframeNotice');
+                    if (notice) notice.style.display = 'block';
                 }
 
                 const wsData = this.websockets.get(wsId);
@@ -4516,6 +4700,9 @@ document.getElementById('openChat').onclick = function() {
                         if (wsData.state === 'open') {
                             const ws = wsData.ws;
                             const timeSinceActivity = now - wsData.lastActivity;
+
+                            // Skip if ws is null (synthetic widget-iframe entries)
+                            if (!ws) return;
 
                             if (ws.readyState === WebSocket.OPEN && timeSinceActivity > ZOMBIE_THRESHOLD) {
                                 if (!wsData.markedZombie) {
@@ -6206,6 +6393,12 @@ document.getElementById('openChat').onclick = function() {
                 document.querySelector('.help-content').scrollTop = 0;
             },
 
+            // Open help and navigate to specific section
+            showSection: function(sectionId) {
+                this.open();
+                this.navigateTo(sectionId);
+            },
+
             exportDocs: function() {
                 const markdown = `# Webex Connect Widget Debug Dashboard - Documentation
 
@@ -6471,6 +6664,11 @@ Configure in General Settings without http/https prefix:
                 helpPanel.close();
             }
         });
+
+        // Global helper function for inline onclick handlers
+        function showHelpSection(sectionId) {
+            helpPanel.showSection(sectionId);
+        }
     </script>
 </body>
 </html>
