@@ -1,0 +1,555 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Contact Us - Fast Pace Health</title>
+    <style>
+        :root {
+            --primary-blue: #1a2b5f;
+            --primary-red: #c41230;
+            --light-gray: #f5f5f5;
+            --border-gray: #e0e0e0;
+            --text-dark: #333;
+            --text-muted: #888;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, sans-serif;
+            color: var(--text-dark);
+            line-height: 1.6;
+            background: #fff;
+        }
+
+        /* Top Alert Bar */
+        .alert-bar {
+            background: var(--primary-blue);
+            color: white;
+            text-align: center;
+            padding: 12px 20px;
+            font-size: 14px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .alert-bar a {
+            color: white;
+            text-decoration: none;
+            font-weight: 600;
+            display: inline-flex;
+            align-items: center;
+            gap: 4px;
+        }
+
+        .alert-bar a:hover {
+            text-decoration: underline;
+        }
+
+        .alert-close {
+            position: absolute;
+            right: 20px;
+            background: none;
+            border: none;
+            color: white;
+            font-size: 20px;
+            cursor: pointer;
+        }
+
+        /* Navigation */
+        .nav-container {
+            background: white;
+            padding: 15px 40px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 1px solid var(--border-gray);
+        }
+
+        .nav-left {
+            display: flex;
+            align-items: center;
+            gap: 20px;
+        }
+
+        .hamburger {
+            display: flex;
+            flex-direction: column;
+            gap: 5px;
+            cursor: pointer;
+            padding: 5px;
+        }
+
+        .hamburger span {
+            width: 24px;
+            height: 2px;
+            background: var(--primary-blue);
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            text-decoration: none;
+        }
+
+        .logo img {
+            height: 40px;
+        }
+
+        .logo-text {
+            font-size: 22px;
+            font-weight: 600;
+            color: var(--primary-blue);
+        }
+
+        .logo-text span {
+            font-weight: 400;
+        }
+
+        .nav-center {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 8px 16px;
+            background: var(--light-gray);
+            border-radius: 8px;
+        }
+
+        .location-icon {
+            width: 36px;
+            height: 36px;
+            background: white;
+            border-radius: 6px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--primary-blue);
+        }
+
+        .location-text {
+            text-align: left;
+        }
+
+        .location-text small {
+            font-size: 11px;
+            color: var(--text-muted);
+        }
+
+        .location-text strong {
+            display: block;
+            font-size: 14px;
+            color: var(--primary-blue);
+        }
+
+        .nav-right {
+            display: flex;
+            align-items: center;
+            gap: 30px;
+        }
+
+        .nav-link {
+            text-decoration: none;
+            color: var(--primary-blue);
+            font-weight: 500;
+            font-size: 15px;
+            display: flex;
+            align-items: center;
+            gap: 4px;
+        }
+
+        .nav-link:hover {
+            color: var(--primary-red);
+        }
+
+        /* Main Content */
+        .main-content {
+            max-width: 1100px;
+            margin: 0 auto;
+            padding: 40px 40px 100px;
+        }
+
+        .back-link {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            color: var(--primary-red);
+            text-decoration: none;
+            font-weight: 500;
+            font-size: 14px;
+            margin-bottom: 20px;
+        }
+
+        .back-link:hover {
+            text-decoration: underline;
+        }
+
+        h1 {
+            font-size: 48px;
+            font-weight: 700;
+            color: var(--primary-blue);
+            margin-bottom: 20px;
+        }
+
+        .intro-text {
+            font-size: 16px;
+            color: var(--text-dark);
+            max-width: 550px;
+            margin-bottom: 12px;
+        }
+
+        .warning-text {
+            font-size: 14px;
+            color: var(--text-dark);
+            max-width: 550px;
+            margin-bottom: 30px;
+        }
+
+        /* Form Layout */
+        .form-container {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 24px;
+        }
+
+        .form-left {
+            display: flex;
+            flex-direction: column;
+            gap: 16px;
+        }
+
+        .form-right {
+            display: flex;
+            flex-direction: column;
+            gap: 16px;
+        }
+
+        .form-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 16px;
+        }
+
+        .form-group {
+            position: relative;
+        }
+
+        .form-group input,
+        .form-group select,
+        .form-group textarea {
+            width: 100%;
+            padding: 16px;
+            border: 1px solid var(--border-gray);
+            border-radius: 8px;
+            font-size: 15px;
+            font-family: inherit;
+            background: white;
+            color: var(--text-dark);
+        }
+
+        .form-group input:focus,
+        .form-group select:focus,
+        .form-group textarea:focus {
+            outline: none;
+            border-color: var(--primary-blue);
+        }
+
+        .form-group input::placeholder,
+        .form-group textarea::placeholder {
+            color: var(--text-muted);
+        }
+
+        .form-group select {
+            appearance: none;
+            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 12 12'%3E%3Cpath fill='%23333' d='M6 8L1 3h10z'/%3E%3C/svg%3E");
+            background-repeat: no-repeat;
+            background-position: right 16px center;
+            cursor: pointer;
+        }
+
+        .form-group textarea {
+            height: 200px;
+            resize: vertical;
+        }
+
+        .required {
+            color: var(--primary-red);
+        }
+
+        /* Checkbox */
+        .checkbox-group {
+            display: flex;
+            align-items: flex-start;
+            gap: 12px;
+            margin-top: 8px;
+        }
+
+        .checkbox-group input[type="checkbox"] {
+            width: 18px;
+            height: 18px;
+            margin-top: 2px;
+            cursor: pointer;
+        }
+
+        .checkbox-group label {
+            font-size: 14px;
+            color: var(--text-dark);
+            line-height: 1.5;
+        }
+
+        /* Submit Button */
+        .submit-btn {
+            background: var(--primary-red);
+            color: white;
+            border: none;
+            padding: 16px 40px;
+            border-radius: 30px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+            align-self: flex-end;
+            margin-top: 16px;
+        }
+
+        .submit-btn:hover {
+            background: #a01028;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(196, 18, 48, 0.3);
+        }
+
+        /* Footer */
+        .footer {
+            background: var(--primary-blue);
+            color: white;
+            text-align: center;
+            padding: 15px;
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            right: 0;
+        }
+
+        .footer a {
+            color: #81d4fa;
+            text-decoration: none;
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .nav-container {
+                padding: 15px 20px;
+            }
+
+            .nav-center,
+            .nav-right {
+                display: none;
+            }
+
+            .main-content {
+                padding: 30px 20px 100px;
+            }
+
+            h1 {
+                font-size: 32px;
+            }
+
+            .form-container {
+                grid-template-columns: 1fr;
+            }
+
+            .form-row {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Alert Bar -->
+    <div class="alert-bar">
+        <span>Sick? COVID, FLU, RSV, cough, cold, or unsure? We can help.</span>
+        <a href="#">Register <span>&rarr;</span></a>
+    </div>
+
+    <!-- Navigation -->
+    <nav class="nav-container">
+        <div class="nav-left">
+            <div class="hamburger">
+                <span></span>
+                <span></span>
+                <span></span>
+            </div>
+            <a href="index.html" class="logo">
+                <img src="fp.jpeg" alt="Fast Pace Health">
+                <span class="logo-text">fastpace<span>health</span></span>
+            </a>
+        </div>
+
+        <div class="nav-center">
+            <div class="location-icon">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect>
+                    <line x1="16" y1="2" x2="16" y2="6"></line>
+                    <line x1="8" y1="2" x2="8" y2="6"></line>
+                    <line x1="3" y1="10" x2="21" y2="10"></line>
+                </svg>
+            </div>
+            <div class="location-text">
+                <small>Fast Pace Health</small>
+                <strong>Paducah, KY | Village Square Drive</strong>
+            </div>
+        </div>
+
+        <div class="nav-right">
+            <a href="#" class="nav-link">Our Services <span>&#9662;</span></a>
+            <a href="#" class="nav-link">Insurance & Pricing <span>&#9662;</span></a>
+        </div>
+    </nav>
+
+    <!-- Main Content -->
+    <main class="main-content">
+        <a href="index.html" class="back-link">&larr; Back</a>
+
+        <h1>Contact Us</h1>
+
+        <p class="intro-text">
+            Use the form below to get in touch with a Fast Pace Health clinic and ask
+            questions about insurance, billing, or services. A representative will get
+            back to you within 1-2 business days.
+        </p>
+
+        <p class="warning-text">
+            Do not submit personal medical information. If you are experiencing a
+            medical emergency, please dial 9-1-1.
+        </p>
+
+        <form id="contactForm" class="form-container">
+            <div class="form-left">
+                <div class="form-group">
+                    <select id="category" name="category" required>
+                        <option value="" disabled selected>Category</option>
+                        <option value="billing">Billing Question</option>
+                        <option value="insurance">Insurance Question</option>
+                        <option value="services">Services Information</option>
+                        <option value="appointments">Appointments</option>
+                        <option value="other">Other</option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <input type="text" id="name" name="name" placeholder="Name *" required>
+                </div>
+
+                <div class="form-row">
+                    <div class="form-group">
+                        <input type="text" id="city" name="city" placeholder="City *" required>
+                    </div>
+                    <div class="form-group">
+                        <select id="state" name="state">
+                            <option value="" disabled selected>State</option>
+                            <option value="AL">Alabama</option>
+                            <option value="KY">Kentucky</option>
+                            <option value="TN">Tennessee</option>
+                            <option value="IN">Indiana</option>
+                            <option value="LA">Louisiana</option>
+                            <option value="MS">Mississippi</option>
+                            <option value="TX">Texas</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <input type="tel" id="phone" name="phone" placeholder="Phone Number *" required>
+                </div>
+
+                <div class="form-group">
+                    <input type="email" id="email" name="email" placeholder="Email *" required>
+                </div>
+            </div>
+
+            <div class="form-right">
+                <div class="form-group">
+                    <textarea id="message" name="message" placeholder="Message *" required></textarea>
+                </div>
+
+                <div class="checkbox-group">
+                    <input type="checkbox" id="consent" name="consent" required>
+                    <label for="consent">
+                        I understand and agree that any information submitted will be
+                        forwarded to our office by email and not via a secure messaging
+                        system.
+                    </label>
+                </div>
+
+                <button type="submit" class="submit-btn">Send Message</button>
+            </div>
+        </form>
+    </main>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <p>Fast Pace Health | Webex Connect Demo Portal</p>
+        <p style="margin-top: 8px; font-size: 12px; opacity: 0.7;">
+            <a href="debug_index.html">Open Advanced Debug Dashboard &rarr;</a>
+        </p>
+    </footer>
+
+    <!-- Webex Connect Chat Widget -->
+    <div id="divicw" data-bind="BDA10ED6-14B4-41E8-A74C-62E0E5895C78" data-org="Fast Pace Health" data-guid="8da474ae-5313-4b52-a2c6-fd6cbf02e5c8"></div>
+    <script src="https://media.imi.chat/widget/js/imichatinit.js"></script>
+
+    <!-- Contact Form Submission -->
+    <script>
+        document.getElementById('contactForm').addEventListener('submit', async function(e) {
+            e.preventDefault();
+
+            const submitBtn = document.querySelector('.submit-btn');
+            const originalText = submitBtn.textContent;
+            submitBtn.textContent = 'Sending...';
+            submitBtn.disabled = true;
+
+            const categorySelect = document.getElementById('category');
+            const payload = {
+                category: categorySelect.options[categorySelect.selectedIndex].text,
+                name: document.getElementById('name').value,
+                city: document.getElementById('city').value,
+                state: document.getElementById('state').value,
+                phone: document.getElementById('phone').value,
+                email: document.getElementById('email').value,
+                message: document.getElementById('message').value,
+                consent: document.getElementById('consent').checked
+            };
+
+            try {
+                const response = await fetch('https://hooks.us.webexconnect.io/events/WQZLJ0BJYH', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify(payload)
+                });
+
+                if (response.ok) {
+                    alert('Thank you! Your message has been sent. We will get back to you within 1-2 business days.');
+                    document.getElementById('contactForm').reset();
+                } else {
+                    throw new Error('Server responded with ' + response.status);
+                }
+            } catch (error) {
+                console.error('Form submission error:', error);
+                alert('There was an error sending your message. Please try again or call us directly.');
+            } finally {
+                submitBtn.textContent = originalText;
+                submitBtn.disabled = false;
+            }
+        });
+    </script>
+</body>
+</html>
